@@ -1,17 +1,15 @@
 //Import packages (ESM is installed):
-import { React, useState, useRef, useEffect } from "react";
+import { React, useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./PostPage.module.css";
 
 function PostPage() {
   //useState Variables:
   const [posts, setPosts] = useState([]);
+  const [createTitle, setCreateTitle] = useState("");
+  const [createDsc, setCreateDsc] = useState("");
   const [statusOfPost, setStatusOfPost] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(false);
-
-  //useRef Variables:
-  const refTitle = useRef();
-  const refDescription = useRef();
 
   //When loaded, print all the posts from the server.
   useEffect(() => {
@@ -26,15 +24,16 @@ function PostPage() {
 
   //Submit button functionality.
   const submitHandler = async () => {
-    if (refTitle.current.value === "" || refDescription.current.value === "") {
+    if (createTitle === "" || createDsc === "") {
       setStatusOfPost("Please fill all the inputs.");
     } else {
       setBtnDisabled(true);
       const res = await axios
         .post("/api/submit", {
-          title: refTitle.current.value,
-          description: refDescription.current.value,
-          date: new Date().toJSON(),
+          title: createTitle,
+          description: createDsc,
+          date:
+            new Date().toDateString() + " " + new Date().toLocaleTimeString(),
         })
         .catch((err) => {
           console.log(`Something went wrong: ${err}`);
@@ -44,8 +43,8 @@ function PostPage() {
       setTimeout(() => {
         setStatusOfPost("");
       }, 5000);
-      refTitle.current.value = "";
-      refDescription.current.value = "";
+      setCreateTitle("");
+      setCreateDsc("");
       loadAllPosts();
       setBtnDisabled(false);
     }
@@ -61,13 +60,17 @@ function PostPage() {
         <input
           className={styles.createPostInput}
           placeholder="Title..."
-          ref={refTitle}
+          type="text"
+          value={createTitle}
+          onChange={(e) => setCreateTitle(e.target.value)}
         ></input>
         {/* Description textarea */}
         <textarea
           className={styles.createPostTextArea}
           placeholder="Body..."
-          ref={refDescription}
+          type="text"
+          value={createDsc}
+          onChange={(e) => setCreateDsc(e.target.value)}
         ></textarea>
         {/* Submit Button */}
         <div className={styles.submitBtnContainer}>
