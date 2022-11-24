@@ -1,0 +1,37 @@
+.createPostContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.createPostInput {
+  width: 80%;
+  height: 30px;
+}
+.createPostTextArea {
+  resize: none;
+  width: 80%;
+  height: 200px;
+  margin-top: 15px;
+}
+
+.submitBtnContainer {
+  display: flex;
+  width: 80%;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+
+.postsContainer {
+  display: flex;
+  width: 80%;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 15px;
+}
+
+.eachPostContainer {
+  border: 1px solid gray;
+  text-align: left;
+  height: 150px;
+  width: 100%;
+}
