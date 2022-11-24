@@ -1,24 +1,117 @@
+html {
+  background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
+  background-attachment: fixed;
+}
+
 .createPostContainer {
   display: flex;
   align-items: center;
   flex-direction: column;
 }
-.createPostInput {
-  width: 80%;
-  height: 30px;
+
+.postTitleHeader {
+  font-family: "Open Sans", sans-serif;
+  color: #222222;
+  font-weight: bold;
+  font-size: 35px;
 }
+
+.titleInputContainer{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 10px;
+  width: 80%;
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.enterTitleCtn, .dscInputCtn {
+  width: 100%;
+  text-align: left;
+  padding-left: 10%;
+}
+
+.enterTitleText, .dscInputText {
+  font-size: 20px;
+  font-weight: normal;
+  font-family: "Open Sans", sans-serif;
+  color: #222222;
+}
+
+.createPostInput {
+  width: 90%;
+  height: 30px;
+  font-family: "Archivo", sans-serif;
+  border: 1px solid hsl(210, 8%, 35%);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  font-size: 16px;
+}
+
+.textAreaContainer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 10px;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 10px;
+  width: 80%;
+  background-color: #ffffff;
+  flex-direction: column;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
 .createPostTextArea {
   resize: none;
-  width: 80%;
+  width: 90%;
   height: 200px;
-  margin-top: 15px;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
 }
 
 .submitBtnContainer {
   display: flex;
   width: 80%;
-  justify-content: flex-end;
+  justify-content: center;
   margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.submitPostBtn {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  border: 1px solid rgb(10, 142, 243);
+  border-top: 2px solid rgb(144, 207, 255);
+  border-radius: 3px;
+  width: 100px;
+  height: 35px;
+  background-color: hsl(206, 100%, 52%);
+}
+
+.submitPostBtn:hover {
+  cursor: pointer;
+  border: 1px solid rgb(10, 129, 221);
+  background-color: rgb(8, 112, 191);
+  border-top: 2px solid rgb(90, 180, 249);
+}
+
+.statusMsgTitle {
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #222222;
+  font-size: 25px;
+  font-weight: normal;
+}
+
+.hrBreak {
+  width: 90%;
+  border: 1px solid hsl(206, 100%, 55%);
+  border-radius: 1px;
 }
 
 .postsContainer {
@@ -30,8 +123,13 @@
 }
 
 .eachPostContainer {
-  border: 1px solid gray;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 3px;
   text-align: left;
+  margin-bottom: 15px;
   height: 150px;
   width: 100%;
+  background-color: #f6f6f6;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  color: #222222;
 }
