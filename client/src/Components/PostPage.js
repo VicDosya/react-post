@@ -103,6 +103,7 @@ function PostPage() {
             return (
               <div key={key} className={styles.eachPostContainer}>
                 <h1 className={styles.postTitle}>{post.title}</h1>
+                <hr className={styles.hrPostBreak}></hr>
                 <p className={styles.postDescription}>{post.description}</p>
                 <span className={styles.postDateTime}>{post.date}</span>
               </div>

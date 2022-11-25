@@ -127,9 +127,42 @@ html {
   border-radius: 3px;
   text-align: left;
   margin-bottom: 15px;
-  height: 150px;
   width: 100%;
   background-color: #f6f6f6;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   color: #222222;
+}
+
+.postTitle {
+  font-size: 25px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-family: "Open Sans", sans-serif;
+  color: #222222;
+  word-wrap: break-word;
+}
+
+.postDescription {
+  font-size: 17px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-family: "Archivo", sans-serif;
+  color: #272727;
+  word-wrap: break-word;
+}
+
+.postDateTime {
+  font-size: 12px;
+  font-weight: bold;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-family: "Open Sans", sans-serif;
+  color: #484646;
+}
+
+.hrPostBreak{
+  width: 95%;
+  border: 1px solid #e2e2e2;
+  border-radius: 1px;
+  margin-top: -10px;
 }
