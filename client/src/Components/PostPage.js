@@ -31,9 +31,7 @@ function PostPage() {
       const res = await axios
         .post("/api/submit", {
           title: createTitle,
-          description: createDsc,
-          date:
-            new Date().toDateString() + " - " + new Date().toLocaleTimeString(),
+          body: createDsc,
         })
         .catch((err) => {
           console.log(`Something went wrong: ${err}`);
@@ -104,8 +102,8 @@ function PostPage() {
               <div key={key} className={styles.eachPostContainer}>
                 <h1 className={styles.postTitle}>{post.title}</h1>
                 <hr className={styles.hrPostBreak}></hr>
-                <p className={styles.postDescription}>{post.description}</p>
-                <span className={styles.postDateTime}>{post.date}</span>
+                <p className={styles.postDescription}>{post.body}</p>
+                <span className={styles.postDateTime}>{post.createdAt}</span>
               </div>
             );
           })}
