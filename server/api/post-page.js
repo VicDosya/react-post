@@ -1,20 +1,22 @@
 //Import packages, variables (ESM installed).
 import express from "express";
+import Post from "../Schemas/Post";
 const app = express();
 
-//Posts array
-const submittedPosts = [];
-
-//Send response to the client
-app.get("/posts", (req, res) => {
-  res.send(submittedPosts);
+//Send response from mongodb to the client
+app.get("/posts", async (req, res) => {
+  const posts = await Post.find();
+  res.send(posts);
 });
 
-//Recieve post data from the client
-app.post("/submit", (req, res) => {
-  submittedPosts.push(req.body);
-  console.log(submittedPosts);
+//Recieve post data from the client and save it to the database
+app.post("/submit", async (req, res) => {
+  const post = new Post({
+    title: req.body.title,
+    body: req.body.body,
+  });
+  await post.save();
   res.send({ statusMsg: "Submitted!" });
 });
 
-module.exports = app;
+export default app;
