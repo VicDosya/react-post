@@ -14,7 +14,7 @@ app.post("/submit", async (req, res) => {
   const post = new Post({
     title: req.body.title,
     body: req.body.body,
-  })
+  });
   await post.save();
   res.send({ statusMsg: "Submitted!" });
 });

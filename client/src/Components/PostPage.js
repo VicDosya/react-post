@@ -55,7 +55,7 @@ function PostPage() {
       <div className={styles.createPostContainer}>
         <h1 className={styles.postTitleHeader}>Create a post📭</h1>
         {/* Title input */}
-        <div className={styles.titleInputContainer}>
+        <div className={styles.cardStyle}>
           <div className={styles.enterTitleCtn}>
             <h1 className={styles.enterTitleText}>Title:</h1>
           </div>
@@ -68,7 +68,7 @@ function PostPage() {
           ></input>
         </div>
         {/* Description textarea */}
-        <div className={styles.textAreaContainer}>
+        <div className={styles.cardStyle}>
           <div className={styles.dscInputCtn}>
             <h1 className={styles.dscInputText}>Description:</h1>
           </div>
@@ -99,11 +99,15 @@ function PostPage() {
         <div className={styles.postsContainer}>
           {posts.map((post, key) => {
             return (
-              <div key={key} className={styles.eachPostContainer}>
-                <h1 className={styles.postTitle}>{post.title}</h1>
-                <hr className={styles.hrPostBreak}></hr>
-                <p className={styles.postDescription}>{post.body}</p>
-                <span className={styles.postDateTime}>{post.createdAt}</span>
+              <div key={key} className={styles.cardStyle}>
+                <div className={styles.alignPostContent}>
+                  <h1 className={styles.postTitle}>{post.title}</h1>
+                  <hr className={styles.hrPostBreak}></hr>
+                  <div className={styles.descriptionCtn}>
+                    <p className={styles.postDescription}>{post.body}</p>
+                  </div>
+                  <span className={styles.postDateTime}>{post.createdAt}</span>
+                </div>
               </div>
             );
           })}
