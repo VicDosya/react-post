@@ -1,11 +1,11 @@
-import './App.css';
-import PostPage from './Components/PostPage';
-
+import PostForm from "./Components/PostForm";
+import Post from "./Components/Post";
 
 function App() {
   return (
     <div className="App">
-      <PostPage />
+      <PostForm />
+      <Post />
     </div>
   );
 }
