@@ -11,7 +11,7 @@ function PostList({ posts }) {
           <Post
             title={post.title}
             body={post.body}
-            date={post.createdAt}
+            postDate={post.createdAt}
             key={key}
           ></Post>
         ))}
