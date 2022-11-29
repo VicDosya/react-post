@@ -1,49 +1,37 @@
 //Import packages (ESM is installed):
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import axios from "axios";
-import styles from "./PostPage.module.css";
+import styles from "./PostForm.module.css";
 
-function PostPage() {
+function PostForm({ onPostSubmitted }) {
   //useState Variables:
-  const [posts, setPosts] = useState([]);
-  const [createTitle, setCreateTitle] = useState("");
-  const [createDsc, setCreateDsc] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [statusOfPost, setStatusOfPost] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(false);
 
-  //When loaded, print all the posts from the server.
-  useEffect(() => {
-    loadAllPosts();
-  }, []);
-
-  //Load all the posts function.
-  const loadAllPosts = async () => {
-    const res = await axios.get("/api/posts");
-    setPosts(res.data);
-  };
-
   //Submit button functionality.
   const submitHandler = async () => {
-    if (createTitle === "" || createDsc === "") {
+    if (title === "" || description === "") {
       setStatusOfPost("Please fill all the inputs.");
     } else {
       setBtnDisabled(true);
       const res = await axios
-        .post("/api/submit", {
-          title: createTitle,
-          body: createDsc,
+        .post("/api/posts", {
+          title: title,
+          body: description,
         })
         .catch((err) => {
           console.log(`Something went wrong: ${err}`);
           setBtnDisabled(false);
         });
+      onPostSubmitted();
       setStatusOfPost(res.data.statusMsg);
       setTimeout(() => {
         setStatusOfPost("");
       }, 5000);
-      setCreateTitle("");
-      setCreateDsc("");
-      loadAllPosts();
+      setTitle("");
+      setDescription("");
       setBtnDisabled(false);
     }
   };
@@ -63,8 +51,8 @@ function PostPage() {
             className={styles.createPostInput}
             placeholder="eg. How to cook an egg"
             type="text"
-            value={createTitle}
-            onChange={(e) => setCreateTitle(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           ></input>
         </div>
         {/* Description textarea */}
@@ -76,8 +64,8 @@ function PostPage() {
             className={styles.createPostTextArea}
             placeholder="eg. Fill a pot full of water, take two eggs..."
             type="text"
-            value={createDsc}
-            onChange={(e) => setCreateDsc(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           ></textarea>
           {/* Submit Button */}
           <div className={styles.submitBtnContainer}>
@@ -94,27 +82,9 @@ function PostPage() {
         <div className={styles.statusMsgContainer}>
           <h1 className={styles.statusMsgTitle}>{statusOfPost}</h1>
         </div>
-        {/* All Posts */}
-        <hr className={styles.hrBreak}></hr>
-        <div className={styles.postsContainer}>
-          {posts.map((post, key) => {
-            return (
-              <div key={key} className={styles.cardStyle}>
-                <div className={styles.alignPostContent}>
-                  <h1 className={styles.postTitle}>{post.title}</h1>
-                  <hr className={styles.hrPostBreak}></hr>
-                  <div className={styles.descriptionCtn}>
-                    <p className={styles.postDescription}>{post.body}</p>
-                  </div>
-                  <span className={styles.postDateTime}>{post.createdAt}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
     </div>
   );
 }
 
-export default PostPage;
+export default PostForm;

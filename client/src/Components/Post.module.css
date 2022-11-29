@@ -1,0 +1,75 @@
+.cardStyle {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgb(217, 217, 217);
+    border-radius: 10px;
+    width: 80%;
+    background-color: #ffffff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    margin-top: 15px;
+    word-wrap: break-word;
+  }
+
+.hrBreak {
+    width: 90%;
+    border: 1px solid hsl(206, 100%, 55%);
+    border-radius: 1px;
+  }
+  
+  .postsContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .postTitle {
+    font-size: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: "Open Sans", sans-serif;
+    color: #222222;
+    word-wrap: break-word;
+  }
+  
+  .postDescription {
+    font-size: 17px;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: "Archivo", sans-serif;
+    color: #272727;
+    word-wrap: break-word;
+  }
+  
+  .postDateTime {
+    font-size: 11px;
+    font-weight: bold;
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: "Open Sans", sans-serif;
+    color: #acacac;
+  }
+  
+  .hrPostBreak {
+    width: 95%;
+    border: 1px solid #e2e2e2;
+    border-radius: 1px;
+    margin-top: -10px;
+  }
+  
+  .alignPostContent {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  
+  .descriptionCtn {
+    width: 100%;
+    text-align: left;
+  }
+  
