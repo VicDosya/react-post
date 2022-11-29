@@ -1,7 +1,6 @@
 //Import packages (ESM is installed)
 import dotenv from "dotenv"; // import .env to import the environment variable.
 dotenv.config(); // This function actually loads the .env file
-import apiFormRoutes from "./api/post-form";
 import apiPostsRoutes from "./api/post";
 import express from "express";
 import bodyParser from "body-parser";
@@ -20,7 +19,6 @@ const PORT = process.env.PORT || 3001;
 //Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/api/postform", apiFormRoutes);
 app.use("/api/posts", apiPostsRoutes);
 
 //Server Start

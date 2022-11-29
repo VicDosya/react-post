@@ -3,34 +3,35 @@ import { React, useState } from "react";
 import axios from "axios";
 import styles from "./PostForm.module.css";
 
-function PostForm() {
+function PostForm({ onPostSubmitted }) {
   //useState Variables:
-  const [createTitle, setCreateTitle] = useState("");
-  const [createDsc, setCreateDsc] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [statusOfPost, setStatusOfPost] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(false);
 
   //Submit button functionality.
   const submitHandler = async () => {
-    if (createTitle === "" || createDsc === "") {
+    if (title === "" || description === "") {
       setStatusOfPost("Please fill all the inputs.");
     } else {
       setBtnDisabled(true);
       const res = await axios
-        .post("/api/postform/submit", {
-          title: createTitle,
-          body: createDsc,
+        .post("/api/posts", {
+          title: title,
+          body: description,
         })
         .catch((err) => {
           console.log(`Something went wrong: ${err}`);
           setBtnDisabled(false);
         });
+      onPostSubmitted();
       setStatusOfPost(res.data.statusMsg);
       setTimeout(() => {
         setStatusOfPost("");
       }, 5000);
-      setCreateTitle("");
-      setCreateDsc("");
+      setTitle("");
+      setDescription("");
       setBtnDisabled(false);
     }
   };
@@ -50,8 +51,8 @@ function PostForm() {
             className={styles.createPostInput}
             placeholder="eg. How to cook an egg"
             type="text"
-            value={createTitle}
-            onChange={(e) => setCreateTitle(e.target.value)}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
           ></input>
         </div>
         {/* Description textarea */}
@@ -63,8 +64,8 @@ function PostForm() {
             className={styles.createPostTextArea}
             placeholder="eg. Fill a pot full of water, take two eggs..."
             type="text"
-            value={createDsc}
-            onChange={(e) => setCreateDsc(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           ></textarea>
           {/* Submit Button */}
           <div className={styles.submitBtnContainer}>
