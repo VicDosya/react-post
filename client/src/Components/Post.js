@@ -1,8 +1,9 @@
 //Import packages
 import { React } from "react";
 import styles from "./Post.module.css";
+import TimeAgo from "react-timeago";
 
-function Post({ title, body, date }) {
+function Post({ title, body, postDate }) {
   return (
     <div className={styles.cardStyle}>
       <div className={styles.alignPostContent}>
@@ -11,7 +12,9 @@ function Post({ title, body, date }) {
         <div className={styles.descriptionCtn}>
           <p className={styles.postDescription}>{body}</p>
         </div>
-        <span className={styles.postDateTime}>{date}</span>
+        <span className={styles.postDateTime}>
+          Posted <TimeAgo date={postDate} />
+        </span>
       </div>
     </div>
   );
