@@ -12,6 +12,7 @@ app.post("/", async (req, res) => {
   const post = new Post({
     title: req.body.title,
     body: req.body.body,
+    author: "LOGGED USERNAME HERE",
   });
   await post.save();
   res.send({ statusMsg: "Submitted!" });
