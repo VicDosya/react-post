@@ -8,7 +8,6 @@
     "esm": "^3.2.25",
     "express": "^4.18.2",
     "mongoose": "^6.7.3",
-    "nodemon": "^2.0.20",
-    "react-timeago": "^7.1.0"
+    "nodemon": "^2.0.20"
   }
 }
