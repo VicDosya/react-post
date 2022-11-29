@@ -11,6 +11,7 @@ function PostList({ posts }) {
           <Post
             title={post.title}
             body={post.body}
+            author={post.author}
             postDate={post.createdAt}
             key={key}
           ></Post>
