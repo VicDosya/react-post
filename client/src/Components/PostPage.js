@@ -1,15 +1,29 @@
-import { React, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { React, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import styles from "./InsidePost.module.css";
+import styles from "./PostPage.module.css";
 import TimeAgo from "react-timeago";
 
-function InsidePost() {
+function PostPage() {
   //useState Variables
+  const [post, setPost] = useState(null);
   const [comment, setComment] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  //useLocation Hook to grab the useNavigate data from Post.js
-  const location = useLocation();
+  //useParams Variables
+  const { postId } = useParams(); //To take the path :postId parameter from App.js
+
+  //useEffect to load the post data
+  useEffect(() => {
+    loadPost();
+  }, []);
+
+  //Load the post data function
+  const loadPost = async () => {
+    const res = await axios.get(`/api/posts/${postId}`);
+    setPost(res.data);
+    setLoading(false);
+  };
 
   //Go back to all posts navigation function
   let navigate = useNavigate();
@@ -24,6 +38,10 @@ function InsidePost() {
     setComment("");
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       {/* Go back button */}
@@ -35,21 +53,21 @@ function InsidePost() {
       <div className={styles.cardStyle}>
         <div className={styles.alignPostContent}>
           {/* Title */}
-          <h1 className={styles.postTitle}>{location.state.title}</h1>
+          <h1 className={styles.postTitle}>{post.title}</h1>
           <hr className={styles.hrPostBreak}></hr>
           {/* Description */}
           <div className={styles.descriptionCtn}>
-            <p className={styles.postDescription}>{location.state.body}</p>
+            <p className={styles.postDescription}>{post.body}</p>
           </div>
           {/* Author */}
           <div className={styles.authorTimeCtn}>
             <div className={styles.authorCtn}>
               Post author:{" "}
-              <span className={styles.postAuthor}>{location.state.author}</span>
+              <span className={styles.postAuthor}>{post.author}</span>
             </div>
             {/* Date */}
             <div className={styles.postDateTime}>
-              Posted: <TimeAgo date={location.state.postDate} />
+              Posted: <TimeAgo date={post.postDate} />
             </div>
           </div>
         </div>
@@ -77,4 +95,4 @@ function InsidePost() {
   );
 }
 
-export default InsidePost;
+export default PostPage;

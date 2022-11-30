@@ -4,11 +4,11 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Post.module.css";
 import TimeAgo from "react-timeago";
 
-function Post({ title, body, author, postDate }) {
+function Post({ id, title, body, author, postDate }) {
   //Navigate inside a post functionality and send its post data inside it.
   let navigate = useNavigate();
   const goToPost = () => {
-    navigate("/insidepost", { state: { title, body, author, postDate } });
+    navigate(`/post/${id}`);
   };
 
   return (

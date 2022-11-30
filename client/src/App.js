@@ -1,9 +1,9 @@
-import { React, useState, useEffect, Fragment } from "react";
+import { React, useState, useEffect } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 import PostForm from "./Components/PostForm";
 import PostList from "./Components/PostList";
-import InsidePost from "./Components/InsidePost";
+import PostPage from "./Components/PostPage";
 
 function App() {
   //useState Variables
@@ -32,8 +32,8 @@ function App() {
           </>
         }
       ></Route>
-      {/* Inside each post */}
-      <Route path="/insidepost" element={<InsidePost />}></Route>
+      {/* Inside each post: :postId is used as useParams in PostPage*/}
+      <Route path="/post/:postId" element={<PostPage />}></Route>
     </Routes>
   );
 }

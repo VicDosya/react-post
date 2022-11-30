@@ -19,11 +19,15 @@ app.post("/", async (req, res) => {
   res.send({ statusMsg: "Submitted!" });
 });
 
-//Submitting a comment
-app.post("/comment", async (req, res) => {
-  console.log(req.body.comment);
-  res.send({statusMsg: "woohoo"});
+//Send back individual post
+app.get("/:postId", async (req, res) => {
+  const post = await Post.findById(req.params.postId);
+  res.send(post);
 });
 
+//Submitting a comment
+app.post("/comment", async (req, res) => {
+  res.send({ statusMsg: "woohoo" });
+});
 
 export default app;
