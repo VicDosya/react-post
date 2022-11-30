@@ -8,6 +8,7 @@ app.get("/", async (req, res) => {
   res.send(posts);
 });
 
+//Submitting a post
 app.post("/", async (req, res) => {
   const post = new Post({
     title: req.body.title,
@@ -17,5 +18,12 @@ app.post("/", async (req, res) => {
   await post.save();
   res.send({ statusMsg: "Submitted!" });
 });
+
+//Submitting a comment
+app.post("/comment", async (req, res) => {
+  console.log(req.body.comment);
+  res.send({statusMsg: "woohoo"});
+});
+
 
 export default app;

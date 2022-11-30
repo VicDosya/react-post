@@ -35,6 +35,11 @@
   word-wrap: break-word;
 }
 
+.postTitle:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .postDescription {
   font-size: 17px;
   padding-left: 15px;

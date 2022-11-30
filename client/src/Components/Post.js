@@ -1,15 +1,29 @@
 //Import packages
 import { React } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Post.module.css";
 import TimeAgo from "react-timeago";
 
 function Post({ title, body, author, postDate }) {
+  //Navigate inside a post functionality and send its post data inside it.
+  let navigate = useNavigate();
+  const goToPost = () => {
+    navigate("/insidepost", { state: { title, body, author, postDate } });
+  };
+
   return (
     // Container
     <div className={styles.cardStyle}>
       <div className={styles.alignPostContent}>
         {/* Title */}
-        <h1 className={styles.postTitle}>{title}</h1>
+        <h1
+          onClick={() => {
+            goToPost();
+          }}
+          className={styles.postTitle}
+        >
+          {title}
+        </h1>
         <hr className={styles.hrPostBreak}></hr>
         {/* Description */}
         <div className={styles.descriptionCtn}>
