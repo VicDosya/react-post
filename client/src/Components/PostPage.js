@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import PostComment from "./PostComment";
+import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import axios from "axios";
 import styles from "./PostPage.module.css";
@@ -80,7 +80,7 @@ function PostPage() {
         </div>
       </div>
       {/* Post a comment */}
-      <PostComment postId={postId} loadComments={loadComments} />
+      <CommentForm postId={postId} loadComments={loadComments} />
       {/* Comments List */}
       <div>
         <CommentList comments={comments} />

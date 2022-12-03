@@ -1,8 +1,8 @@
 import { React, useState } from "react";
-import styles from "./PostComment.module.css";
+import styles from "./CommentForm.module.css";
 import axios from "axios";
 
-function PostComment({ postId, loadComments }) {
+function CommentForm({ postId, loadComments }) {
   //useState Variables
   const [comment, setComment] = useState("");
 
@@ -37,4 +37,4 @@ function PostComment({ postId, loadComments }) {
   );
 }
 
-export default PostComment;
+export default CommentForm;
