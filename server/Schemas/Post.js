@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Comment from './Comment';
+import Comment from "./Comment";
 
 const PostSchema = new mongoose.Schema({
   title: {
@@ -19,7 +19,6 @@ const PostSchema = new mongoose.Schema({
     default: Date,
     required: true,
   },
-  comments: [Comment],
 });
 
-export default mongoose.model("posts", PostSchema);
+export default mongoose.model("post", PostSchema);

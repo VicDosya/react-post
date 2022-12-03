@@ -1,6 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const Comment = new mongoose.Schema({
+  post: {
+    type: Schema.Types.ObjectId,
+    ref: "post",
+  },
   body: {
     type: String,
     required: true,
@@ -16,4 +20,4 @@ const Comment = new mongoose.Schema({
   },
 });
 
-export default Comment;
+export default mongoose.model("comment", Comment);

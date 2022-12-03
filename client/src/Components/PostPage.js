@@ -1,5 +1,7 @@
 import { React, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import PostComment from "./PostComment";
+import CommentList from "./CommentList";
 import axios from "axios";
 import styles from "./PostPage.module.css";
 import TimeAgo from "react-timeago";
@@ -7,7 +9,7 @@ import TimeAgo from "react-timeago";
 function PostPage() {
   //useState Variables
   const [post, setPost] = useState(null);
-  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   //useParams Variables
@@ -16,6 +18,7 @@ function PostPage() {
   //useEffect to load the post data
   useEffect(() => {
     loadPost();
+    loadComments();
   }, []);
 
   //Load the post data function
@@ -25,21 +28,25 @@ function PostPage() {
     setLoading(false);
   };
 
+  //Load all the comments of this post
+  const loadComments = async () => {
+    const res = await axios.get(`/api/posts/${postId}/comments`);
+    setComments(res.data);
+    console.log(res.data);
+  };
+
   //Go back to all posts navigation function
   let navigate = useNavigate();
   const goBackRoute = () => {
     navigate("/");
   };
 
-  //Submit a comment
-  const submitComment = async () => {
-    const res = await axios.post("/api/posts/comment", { comment: comment });
-    console.log(res.data.statusMsg);
-    setComment("");
-  };
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className={styles.spinnerCtn}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
   }
 
   return (
@@ -67,29 +74,16 @@ function PostPage() {
             </div>
             {/* Date */}
             <div className={styles.postDateTime}>
-              Posted: <TimeAgo date={post.postDate} />
+              Posted: <TimeAgo date={post.createdAt} />
             </div>
           </div>
         </div>
       </div>
-
-      {/* Add a comment */}
-      <div className={styles.addCommentCtn}>
-        <h1 className={styles.addCommentTitle}>Add a comment:</h1>
-        <div className={styles.textAreaCtn}>
-          <textarea
-            type="text"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className={styles.commentTextArea}
-            placeholder="Add your comment here..."
-          ></textarea>
-        </div>
-        <div className={styles.submitBtnCtn}>
-          <button onClick={submitComment} className={styles.submitCommentBtn}>
-            Submit
-          </button>
-        </div>
+      {/* Post a comment */}
+      <PostComment postId={postId} loadComments={loadComments} />
+      {/* Comments List */}
+      <div>
+        <CommentList comments={comments} />
       </div>
     </div>
   );
