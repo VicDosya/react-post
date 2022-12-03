@@ -9,6 +9,7 @@ function PostList({ posts }) {
       <div className={styles.postsContainer}>
         {posts.map((post, key) => (
           <Post
+            id={post._id}
             title={post.title}
             body={post.body}
             author={post.author}

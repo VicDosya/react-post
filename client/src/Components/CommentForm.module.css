@@ -1,0 +1,62 @@
+.addCommentCtn {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin-top: 15px;
+    text-indent: 15px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: 1px solid rgb(217, 217, 217);
+  }
+  
+  .addCommentTitle {
+    font-family: "Open Sans", sans-serif;
+    font-size: 20px;
+    color: #222222;
+  }
+  
+  .textAreaCtn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .commentTextArea {
+    resize: none;
+    width: 95%;
+    height: 100px;
+    border-radius: 5px;
+    font-family: "Open Sans", sans-serif;
+    font-size: 16px;
+  }
+  
+  .submitBtnCtn {
+    margin-top: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+  
+  .submitCommentBtn {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border: 1px solid rgb(30, 164, 43);
+    border-top: 2px solid rgb(102, 255, 112);
+    border-radius: 3px;
+    width: 100px;
+    height: 35px;
+    background-color: hsl(122, 40%, 53%);
+  }
+  
+  .submitCommentBtn:hover {
+    cursor: pointer;
+    border: 1px solid rgb(33, 152, 45);
+    background-color: hsl(122, 33%, 38%);
+    border-top: 2px solid rgb(85, 193, 93);
+  }
+  

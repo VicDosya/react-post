@@ -1,7 +1,8 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
-import PostForm from "./Components/PostForm";
-import PostList from "./Components/PostList";
+import { Routes, Route } from "react-router-dom";
+import PostPage from "./Components/PostPage";
+import HomePage from "./Components/HomePage";
 
 function App() {
   //useState Variables
@@ -19,10 +20,15 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <PostForm onPostSubmitted={loadAllPosts} />
-      <PostList posts={posts} />
-    </div>
+    <Routes>
+      {/* Home page, Post form and all posts list */}
+      <Route
+        path="/"
+        element={<HomePage posts={posts} onPostSubmitted={loadAllPosts} />}
+      ></Route>
+      {/* Inside each post: :postId is used as useParams in PostPage*/}
+      <Route path="/post/:postId" element={<PostPage />}></Route>
+    </Routes>
   );
 }
 

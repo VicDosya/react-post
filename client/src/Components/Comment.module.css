@@ -1,0 +1,65 @@
+.contentCtn {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.cardStyle {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid rgb(217, 217, 217);
+  border-radius: 10px;
+  width: 70%;
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  word-wrap: break-word;
+}
+
+.authorCtn {
+  display: flex;
+  width: 100%;
+  flex-direction: left;
+  padding-left: 25px;
+  margin-top: 10px;
+}
+
+.commentAuthor {
+  font-size: 14px;
+  text-decoration: underline;
+  font-weight: bold;
+  font-family: "Open Sans", sans-serif;
+  color: #222222;
+}
+
+.commentCtn {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  padding-left: 50px;
+  margin-top: 10px;
+}
+
+.commentBody {
+  font-family: "Archivo", sans-serif;
+  color: #222222;
+}
+
+.dateCtn {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.commentDate {
+  font-size: 11px;
+  font-weight: bold;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-family: "Open Sans", sans-serif;
+  color: #acacac;
+}
