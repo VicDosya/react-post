@@ -1,7 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
 
 function Login() {
+  //Route to register page
+  let navigate = useNavigate();
+  const goRegister = () => {
+    navigate("/auth/register");
+  };
+
   return (
     //Login Container
     <div className={styles.Ctn}>
@@ -36,7 +43,9 @@ function Login() {
         {/* Footer */}
         <div className={styles.footerCtn}>
           <div>
-            <p className={styles.fTitleLeft}>Register</p>
+            <p onClick={goRegister} className={styles.fTitleLeft}>
+              Register
+            </p>
           </div>
           <div className={styles.fTitleRight}>Forgot Password?</div>
         </div>
