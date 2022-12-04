@@ -120,6 +120,19 @@
   text-align: left;
 }
 
+.errorCtn {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.errorStatus {
+  font-size: 15px;
+  font-weight: bold;
+  color: red;
+  font-family: "Open Sans", sans-serif;
+}
+
 .spinnerCtn {
   display: flex;
   justify-content: center;

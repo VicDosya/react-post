@@ -5,13 +5,18 @@ import axios from "axios";
 function CommentForm({ postId, loadComments }) {
   //useState Variables
   const [comment, setComment] = useState("");
+  const [error, setError] = useState("");
 
   //Submit a comment
   const submitComment = async () => {
     const res = await axios.post(`/api/posts/${postId}/comment`, { comment });
-    console.log(res.data.statusMsg);
-    setComment("");
-    loadComments();
+    if (res.data.error) {
+      setError(res.data.error);
+    } else {
+      setComment("");
+      loadComments();
+      setError("");
+    }
   };
 
   return (
@@ -31,6 +36,7 @@ function CommentForm({ postId, loadComments }) {
           <button onClick={submitComment} className={styles.submitCommentBtn}>
             Submit
           </button>
+          <div className={styles.errorStatus}>{error}</div>
         </div>
       </div>
     </div>
