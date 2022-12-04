@@ -22,30 +22,46 @@ app.post("/", async (req, res) => {
 
 //Send back individual post
 app.get("/:postId", async (req, res) => {
-  const post = await Post.findById(req.params.postId);
-  res.send(post);
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.send({ error: "Post not found." });
+    }
+    res.send(post);
+  } catch (err) {
+    res.send({ error: "Invalid id" });
+  }
 });
 
 //Submitting a comment to individual posts
 app.post("/:postId/comment", async (req, res) => {
-  const comment = new Comment({
-    post: req.params.postId,
-    body: req.body.comment,
-    author: "LOGGED USERNAME",
-  });
+  const post = await Post.findById(req.params.postId);
+  if (!post) {
+    res.send({ error: "Invalid post" });
+  } else {
+    const comment = new Comment({
+      post: req.params.postId,
+      body: req.body.comment,
+      author: "LOGGED USERNAME",
+    });
 
-  await comment.save();
-  console.log(req.body.comment);
-  console.log(req.params.postId);
-  res.send({ statusMsg: "Comment submitted!" });
+    await comment.save();
+    console.log(req.body.comment);
+    console.log(req.params.postId);
+    res.send({ statusMsg: "Comment submitted!" });
+  }
 });
 
 //Get the comments of the individual post
 app.get("/:postId/comments", async (req, res) => {
-  const comments = await Comment.find({
-    post: req.params.postId,
-  });
-  res.send(comments);
+  try {
+    const comments = await Comment.find({
+      post: req.params.postId,
+    });
+    res.send({ comments });
+  } catch (err) {
+    res.send({ error: "Invalid id" });
+  }
 });
 
 export default app;

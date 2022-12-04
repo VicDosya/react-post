@@ -8,9 +8,10 @@ import TimeAgo from "react-timeago";
 
 function PostPage() {
   //useState Variables
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("Something Went Wrong");
 
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
@@ -24,15 +25,23 @@ function PostPage() {
   //Load the post data function
   const loadPost = async () => {
     const res = await axios.get(`/api/posts/${postId}`);
-    setPost(res.data);
+    if (res.data.error) {
+      setError(res.data.error);
+    } else {
+      setPost(res.data);
+      setError("");
+    }
     setLoading(false);
   };
 
   //Load all the comments of this post
   const loadComments = async () => {
     const res = await axios.get(`/api/posts/${postId}/comments`);
-    setComments(res.data);
-    console.log(res.data);
+    if (res.data.error) {
+      setError(res.data.error);
+    } else {
+      setComments(res.data.comments);
+    }
   };
 
   //Go back to all posts navigation function
@@ -56,6 +65,9 @@ function PostPage() {
         <button onClick={goBackRoute} className={styles.backBtn}>
           Go back
         </button>
+      </div>
+      <div className={styles.errorCtn}>
+        <div className={styles.errorStatus}>{error}</div>
       </div>
       <div className={styles.cardStyle}>
         <div className={styles.alignPostContent}>
