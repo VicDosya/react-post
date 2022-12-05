@@ -19,7 +19,7 @@ function HomePage({ posts, onPostSubmitted }) {
 
   //Load Profile function
   const loadProfile = async () => {
-    const res = await axios.get('/api/posts/profile');
+    const res = await axios.get('/api/auth/profile');
     if (res.data.error) {
       navigate("/auth/login");
     } else {
@@ -29,19 +29,21 @@ function HomePage({ posts, onPostSubmitted }) {
 
   //Logout function
   const handleLogout = async () => {
-    const res = await axios.get('/api/posts/logout');
+    const res = await axios.get('/api/auth/logout');
     navigate('/auth/login');
   };
 
 
   return (
     <div>
+      {/* User */}
       <div>
         {profile?.fname}
       </div>
       <div>
         <button onClick={handleLogout}>Logout</button>
       </div>
+      {/* Rest of components */}
       <PostForm onPostSubmitted={onPostSubmitted} />
       <PostList posts={posts} />
     </div>

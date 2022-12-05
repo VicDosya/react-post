@@ -16,7 +16,7 @@ function Login() {
 
   //Load Profile function
   const loadProfile = async () => {
-    const res = await axios.get("/api/posts/profile");
+    const res = await axios.get("/api/auth/profile");
     if (res.data.error) {
       navigate("/auth/login");
     } else {
@@ -26,7 +26,7 @@ function Login() {
 
   //Submit log in data to the server
   const handleSubmit = async () => {
-    const res = await axios.post("/api/posts/login", {
+    const res = await axios.post("/api/auth/login", {
       email: email,
       password: password,
     });

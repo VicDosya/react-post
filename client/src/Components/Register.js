@@ -19,7 +19,7 @@ function Register() {
 
   //Submit user data to the server
   const handleSubmit = async () => {
-    const res = await axios.post("/api/posts/register", {
+    const res = await axios.post("/api/auth/register", {
       fname: firstName,
       lname: lastName,
       email: email,

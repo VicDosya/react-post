@@ -3,6 +3,7 @@ import dotenv from "dotenv"; // import .env to import the environment variable.
 dotenv.config(); // This function actually loads the .env file
 import session from "express-session";
 import apiPostsRoutes from "./api/post";
+import apiAuthRoutes from "./api/auth";
 import express from "express";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
@@ -27,6 +28,7 @@ app.use(
 );
 
 //Routes
+app.use("/api/auth", apiAuthRoutes);
 app.use("/api/posts", apiPostsRoutes);
 
 //Server Start
