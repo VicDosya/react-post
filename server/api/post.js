@@ -18,7 +18,7 @@ app.post("/register", async (req, res) => {
   const passwordRegex = new RegExp(
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
   ); // atleast 8 + small + big + symbol.
-    const oldUser = await UserDetails.findOne({email: req.body.email});
+  const oldUser = await UserDetails.findOne({ email: req.body.email });
   //Validation functionality
   const checkValidation = () => {
     if (
@@ -45,8 +45,26 @@ app.post("/register", async (req, res) => {
     });
     await user.save();
     res.send({ status: "Success" });
+  } else if (oldUser) {
+    return res.send({ status: "This user already exists", error: true });
   } else {
-    res.send({ status: "One or more input fields are not valid.", error: true });
+    res.send({
+      status: "One or more input fields are not valid.",
+      error: true,
+    });
+  }
+});
+
+//Log in with user data
+app.post('/login', async (req, res) => {
+  const userEmail = await UserDetails.findOne({email: req.body.email});
+  const userPassword = await UserDetails.findOne({password: req.body.password});
+  if(!userEmail) {
+    res.send({status: "User does not exist.", error: true})
+  } else if (!userPassword) {
+    res.send({status: "Incorrect password", error: true});
+  } else {
+    res.send({status:"Logged in! Redirecting..."});
   }
 });
 

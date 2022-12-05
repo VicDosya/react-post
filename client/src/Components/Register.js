@@ -33,6 +33,7 @@ function Register() {
       setEmail("");
       setPassword("");
       setStatus(res.data.status);
+      setTimeout(goLogin, 1500);
     }
   };
 

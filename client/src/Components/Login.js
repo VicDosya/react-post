@@ -1,12 +1,37 @@
-import React from "react";
+import { React, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
 
 function Login() {
-  //Route to register page
+  //useState Variables
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState("");
+
+  //Submit log in data to the server
+  const handleSubmit = async () => {
+    const res = await axios.post("/api/posts/login", {
+      email: email,
+      password: password,
+    });
+    if (res.data.error) {
+      setStatus(res.data.status);
+    } else {
+      setStatus(res.data.status);
+      setEmail("");
+      setPassword("");
+      setTimeout(goHomePage, 2000);
+    }
+  };
+
+  //Route to different pages
   let navigate = useNavigate();
   const goRegister = () => {
     navigate("/auth/register");
+  };
+  const goHomePage = () => {
+    navigate("/");
   };
 
   return (
@@ -17,19 +42,32 @@ function Login() {
         <h1 className={styles.mainTitle}>Log In</h1>
       </div>
       <div className={styles.restCtn}>
+        {/* Status Message */}
+        <div className={styles.statusCtn}>
+          <h1 className={styles.status}>{status}</h1>
+        </div>
         {/* Email */}
         <div className={styles.emailCtn}>
           <p className={styles.title}>Email address:</p>
         </div>
         <div className={styles.inputCtn}>
-          <input className={styles.input}></input>
+          <input
+            className={styles.input}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          ></input>
         </div>
         {/* Password */}
         <div className={styles.passwordCtn}>
           <p className={styles.title}>Password:</p>
         </div>
         <div className={styles.inputCtn}>
-          <input className={styles.input} type="password"></input>
+          <input
+            className={styles.input}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          ></input>
         </div>
         {/* Remember me */}
         <div className={styles.rememberCtn}>
@@ -38,7 +76,9 @@ function Login() {
         </div>
         {/* Button */}
         <div className={styles.btnCtn}>
-          <button className={styles.submitBtn}>Submit</button>
+          <button onClick={handleSubmit} className={styles.submitBtn}>
+            Submit
+          </button>
         </div>
         {/* Footer */}
         <div className={styles.footerCtn}>
