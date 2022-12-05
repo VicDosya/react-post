@@ -56,16 +56,35 @@ app.post("/register", async (req, res) => {
 });
 
 //Log in with user data
-app.post('/login', async (req, res) => {
-  const userEmail = await UserDetails.findOne({email: req.body.email});
-  const userPassword = await UserDetails.findOne({password: req.body.password});
-  if(!userEmail) {
-    res.send({status: "User does not exist.", error: true})
-  } else if (!userPassword) {
-    res.send({status: "Incorrect password", error: true});
-  } else {
-    res.send({status:"Logged in! Redirecting..."});
+app.post("/login", async (req, res) => {
+  if (req.session.user) {
+    res.send(req.session.user);
   }
+  const user = await UserDetails.findOne({
+    email: req.body.email,
+    password: req.body.password,
+  });
+  if (!user) {
+    res.send({ status: "Invalid email or password.", error: true });
+  } else {
+    req.session.user = user;
+    res.send(user);
+  }
+});
+
+//Profile api to return to the user
+app.get("/profile", async (req, res) => {
+  if (req.session.user) {
+    res.send(req.session.user);
+  } else {
+    res.send({ status: "User not logged in.", error: true });
+  }
+});
+
+//Profile api to logout
+app.get("/logout", async (req, res) => {
+    req.session.user = null; //Removing the user from the session
+    res.send({ status: "Logged out..."});
 });
 
 //Send back all the posts

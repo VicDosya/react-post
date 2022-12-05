@@ -12,15 +12,27 @@ function PostPage() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("Something Went Wrong");
+  const [profile, setProfile] = useState(null);
 
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
 
   //useEffect to load the post data
   useEffect(() => {
+    loadProfile();
     loadPost();
     loadComments();
   }, []);
+
+  //Load Profile function
+  const loadProfile = async () => {
+    const res = await axios.get('/api/posts/profile');
+    if (res.data.error) {
+      navigate("/auth/login");
+    } else {
+      setProfile(res.data);
+    }
+  };
 
   //Load the post data function
   const loadPost = async () => {
@@ -49,7 +61,6 @@ function PostPage() {
   const goBackRoute = () => {
     navigate("/");
   };
-
   if (loading) {
     return (
       <div className={styles.spinnerCtn}>
@@ -65,6 +76,9 @@ function PostPage() {
         <button onClick={goBackRoute} className={styles.backBtn}>
           Go back
         </button>
+        <div>
+          {profile?.fname}
+        </div>
       </div>
       <div className={styles.errorCtn}>
         <div className={styles.errorStatus}>{error}</div>

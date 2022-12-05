@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
@@ -8,6 +8,21 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
+
+  //useEffect
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  //Load Profile function
+  const loadProfile = async () => {
+    const res = await axios.get("/api/posts/profile");
+    if (res.data.error) {
+      navigate("/auth/login");
+    } else {
+      navigate("/");
+    }
+  };
 
   //Submit log in data to the server
   const handleSubmit = async () => {
