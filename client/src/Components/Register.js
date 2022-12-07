@@ -25,14 +25,12 @@ function Register() {
       email: email,
       password: password,
     });
-    if (res.data.error) {
-      setStatus(res.data.status);
-    } else {
+    setStatus(res.data.status);
+    if (!res.data.error) {
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
-      setStatus(res.data.status);
       setTimeout(goLogin, 1500);
     }
   };

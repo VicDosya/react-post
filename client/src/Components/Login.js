@@ -30,10 +30,8 @@ function Login() {
       email: email,
       password: password,
     });
-    if (res.data.error) {
-      setStatus(res.data.status);
-    } else {
-      setStatus(res.data.status);
+    setStatus(res.data.status);
+    if (!res.data.error) {
       setEmail("");
       setPassword("");
       setTimeout(goHomePage, 2000);

@@ -15,7 +15,7 @@ app.post("/register", async (req, res) => {
   const emailRegex = new RegExp(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
   const passwordRegex = new RegExp(
     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm
-  ); // atleast 8 + small + big + symbol.
+  ); // atleast 8 + small + big.
   const oldUser = await UserDetails.findOne({ email: req.body.email });
   //Validation functionality
   const checkValidation = () => {
@@ -56,7 +56,7 @@ app.post("/register", async (req, res) => {
 //Log in with user data
 app.post("/login", async (req, res) => {
   if (req.session.user) {
-    res.send(req.session.user);
+    return res.send(req.session.user);
   }
   const user = await UserDetails.findOne({
     email: req.body.email,
@@ -81,8 +81,8 @@ app.get("/profile", async (req, res) => {
 
 //Profile api to logout
 app.get("/logout", async (req, res) => {
-    req.session.user = null; //Removing the user from the session
-    res.send({ status: "Logged out..."});
+  req.session.user = null; //Removing the user from the session
+  res.send({ status: "Logged out..." });
 });
 
 export default app;
