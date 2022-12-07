@@ -1,6 +1,7 @@
 import express from "express";
 import Post from "../Schemas/Post";
 import Comment from "../Schemas/Comment";
+import UserDetails from "../Schemas/UserDetails";
 const app = express();
 
 //Send back all the posts
@@ -11,10 +12,11 @@ app.get("/", async (req, res) => {
 
 //Submitting a post
 app.post("/", async (req, res) => {
+  console.log(req.session.user);
   const post = new Post({
     title: req.body.title,
     body: req.body.body,
-    author: "LOGGED USERNAME HERE",
+    author: req.session.user.fname + " " + req.session.user.lname,
   });
   await post.save(); //Updates the document in the DB.
   res.send({ statusMsg: "Submitted!" });
@@ -42,7 +44,7 @@ app.post("/:postId/comment", async (req, res) => {
     const comment = new Comment({
       post: req.params.postId,
       body: req.body.comment,
-      author: "LOGGED USERNAME",
+      author: req.session.user.fname + " " + req.session.user.lname,
     });
 
     await comment.save();

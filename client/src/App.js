@@ -1,6 +1,7 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
+import Auth from "./Components/Auth";
 import PostPage from "./Components/PostPage";
 import HomePage from "./Components/HomePage";
 
@@ -21,6 +22,8 @@ function App() {
 
   return (
     <Routes>
+      {/* Authentication */}
+      <Route path="/auth/*" element={<Auth />}></Route>
       {/* Home page, Post form and all posts list */}
       <Route
         path="/"

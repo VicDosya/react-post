@@ -12,15 +12,33 @@ function PostPage() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("Something Went Wrong");
+  const [profile, setProfile] = useState(null);
 
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
 
   //useEffect to load the post data
   useEffect(() => {
+    loadProfile();
     loadPost();
     loadComments();
   }, []);
+
+  //Load Profile function
+  const loadProfile = async () => {
+    const res = await axios.get("/api/auth/profile");
+    if (res.data.error) {
+      navigate("/auth/login");
+    } else {
+      setProfile(res.data);
+    }
+  };
+
+  //Logout function
+  const handleLogout = async () => {
+    const res = await axios.get("/api/auth/logout");
+    navigate("/auth/login");
+  };
 
   //Load the post data function
   const loadPost = async () => {
@@ -49,7 +67,6 @@ function PostPage() {
   const goBackRoute = () => {
     navigate("/");
   };
-
   if (loading) {
     return (
       <div className={styles.spinnerCtn}>
@@ -60,6 +77,11 @@ function PostPage() {
 
   return (
     <div>
+      {/* User */}
+      <div>{profile?.fname}</div>
+      <div>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
       {/* Go back button */}
       <div className={styles.backBtnCtn}>
         <button onClick={goBackRoute} className={styles.backBtn}>

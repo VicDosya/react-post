@@ -36,15 +36,16 @@
 
 .commentCtn {
   display: flex;
-  width: 100%;
+  width: 90%;
   justify-content: flex-start;
-  padding-left: 50px;
   margin-top: 10px;
+  word-wrap: break-word;
 }
 
 .commentBody {
   font-family: "Archivo", sans-serif;
   color: #222222;
+  word-wrap: break-word;
 }
 
 .dateCtn {
