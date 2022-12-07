@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Auth from "./Components/Auth";
 import PostPage from "./Components/PostPage";
 import HomePage from "./Components/HomePage";
+import EditPost from "./Components/EditPost";
 
 function App() {
   //useState Variables
@@ -31,6 +32,7 @@ function App() {
       ></Route>
       {/* Inside each post: :postId is used as useParams in PostPage*/}
       <Route path="/post/:postId" element={<PostPage />}></Route>
+      <Route path="/post/:postId/edit" element={<EditPost />}></Route>
     </Routes>
   );
 }

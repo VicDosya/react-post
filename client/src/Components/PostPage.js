@@ -6,13 +6,14 @@ import axios from "axios";
 import styles from "./PostPage.module.css";
 import TimeAgo from "react-timeago";
 
-function PostPage() {
+function PostPage({posts}) {
   //useState Variables
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("Something Went Wrong");
+  const [error, setError] = useState("");
   const [profile, setProfile] = useState(null);
+  const [btnDisabled, setbtnDisabled] = useState(false);
 
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
@@ -39,6 +40,16 @@ function PostPage() {
     const res = await axios.get("/api/auth/logout");
     navigate("/auth/login");
   };
+
+  //Edit post functionality
+  const handleEditPost = async () => {
+    const res = await axios.get(`/api/posts/${postId}/edit`);
+    setError(res.data.error);
+    setbtnDisabled(true);
+    if(res.data.auth) {
+      navigate(`/post/${postId}/edit`);
+    }
+  }
 
   //Load the post data function
   const loadPost = async () => {
@@ -83,13 +94,16 @@ function PostPage() {
         <button onClick={handleLogout}>Logout</button>
       </div>
       {/* Go back button */}
-      <div className={styles.backBtnCtn}>
-        <button onClick={goBackRoute} className={styles.backBtn}>
-          Go back
-        </button>
-      </div>
-      <div className={styles.errorCtn}>
-        <div className={styles.errorStatus}>{error}</div>
+      <div className={styles.TopBtnsCtn}>
+        <div>
+          <button onClick={goBackRoute} className={styles.backBtn}>
+            Go back
+          </button>
+        </div>
+        {/* Edit post button */}
+        <div>
+          <button onClick={handleEditPost} className={styles.editPostBtn} disabled={btnDisabled}>Edit Post</button>
+        </div>
       </div>
       <div className={styles.cardStyle}>
         <div className={styles.alignPostContent}>
@@ -115,6 +129,10 @@ function PostPage() {
       </div>
       {/* Post a comment */}
       <CommentForm postId={postId} loadComments={loadComments} />
+      {/* Errors */}
+      <div className={styles.errorCtn}>
+        <h1>{error}</h1>
+      </div>
       {/* Comments List */}
       <div>
         <CommentList comments={comments} />

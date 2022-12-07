@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 import Comment from "./Comment";
 
 const PostSchema = new mongoose.Schema({
+  userId: {
+    type: String,
+    required: true,
+  },
   title: {
     type: String,
     required: true,

@@ -14,6 +14,7 @@ app.get("/", async (req, res) => {
 app.post("/", async (req, res) => {
   console.log(req.session.user);
   const post = new Post({
+    userId: req.session.user._id,
     title: req.body.title,
     body: req.body.body,
     author: req.session.user.fname + " " + req.session.user.lname,
@@ -65,5 +66,23 @@ app.get("/:postId/comments", async (req, res) => {
     res.send({ error: "Invalid id" });
   }
 });
+
+//Give access to edit a post via edit post button
+app.get("/:postId/edit", async (req, res) => {
+  try {
+    const userPost = await Post.findOne({
+      userId: req.session.user._id,
+    });
+    if (!userPost) {
+      return res.send({ error: "No permission to edit the post." });
+    } else {
+      res.send({ auth: true });
+    }
+  } catch (err) {
+    res.send({ error: "Something went wrong." });
+  }
+});
+
+//Send post data upon editing
 
 export default app;
