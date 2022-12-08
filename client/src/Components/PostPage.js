@@ -6,7 +6,7 @@ import axios from "axios";
 import styles from "./PostPage.module.css";
 import TimeAgo from "react-timeago";
 
-function PostPage({posts}) {
+function PostPage({ posts }) {
   //useState Variables
   const [post, setPost] = useState({});
   const [comments, setComments] = useState([]);
@@ -43,13 +43,8 @@ function PostPage({posts}) {
 
   //Edit post functionality
   const handleEditPost = async () => {
-    const res = await axios.get(`/api/posts/${postId}/edit`);
-    setError(res.data.error);
-    setbtnDisabled(true);
-    if(res.data.auth) {
-      navigate(`/post/${postId}/edit`);
-    }
-  }
+    navigate(`/post/${postId}/edit`);
+  };
 
   //Load the post data function
   const loadPost = async () => {
@@ -102,7 +97,16 @@ function PostPage({posts}) {
         </div>
         {/* Edit post button */}
         <div>
-          <button onClick={handleEditPost} className={styles.editPostBtn} disabled={btnDisabled}>Edit Post</button>
+          {/* Post displayed only if the user is the author of the post */}
+          {profile?._id === post.userId && (
+            <button
+              onClick={handleEditPost}
+              className={styles.editPostBtn}
+              disabled={btnDisabled}
+            >
+              Edit Post
+            </button>
+          )}
         </div>
       </div>
       <div className={styles.cardStyle}>

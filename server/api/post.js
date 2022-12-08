@@ -67,22 +67,37 @@ app.get("/:postId/comments", async (req, res) => {
   }
 });
 
-//Give access to edit a post via edit post button
-app.get("/:postId/edit", async (req, res) => {
+//Send post data upon editing
+app.get("/:postId", async (req, res) => {
   try {
-    const userPost = await Post.findOne({
-      userId: req.session.user._id,
+    const post = await Post.find({
+      _id: req.params.postId,
     });
-    if (!userPost) {
-      return res.send({ error: "No permission to edit the post." });
+    if (!post) {
+      return res.send({ error: "Post not found." });
     } else {
-      res.send({ auth: true });
+      res.send({ post });
     }
   } catch (err) {
-    res.send({ error: "Something went wrong." });
+    res.send({ error: "Invalid post" });
   }
 });
 
-//Send post data upon editing
+//Edit post data
+app.put("/:postId", async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params.postId, {
+      title: req.body.title,
+      body: req.body.description,
+    });
+    if (!post) {
+      return res.send({ error: "Post is not found" });
+    } else {
+      res.send({ statusMsg: "Post edit is submitted" });
+    }
+  } catch (err) {
+    res.send({ error: "Something went wrong" });
+  }
+});
 
 export default app;

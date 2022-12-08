@@ -80,23 +80,6 @@ app.get("/profile", async (req, res) => {
   }
 });
 
-// Editing a post authorization (also blocks for writing /edit in the URL)...
-app.get("/:postId/edit", async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.postId);
-    const userIdPost = await Post.findOne({
-      userId: req.session.user._id,
-    });
-    if (!userIdPost || !post) {
-      return res.send({ error });
-    } else {
-      res.send({ auth: true });
-    }
-  } catch (err) {
-    res.send({ error: "Something went wrong..." });
-  }
-});
-
 //Profile api to logout
 app.get("/logout", async (req, res) => {
   req.session.user = null; //Removing the user from the session

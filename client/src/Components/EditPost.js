@@ -10,6 +10,7 @@ function EditPost() {
   const [description, setDescription] = useState("");
   const [statusOfPost, setStatusOfPost] = useState("");
   const [btnDisabled, setBtnDisabled] = useState(false);
+  const [error, setError] = useState("");
 
   //useNavigate
   let navigate = useNavigate();
@@ -19,8 +20,7 @@ function EditPost() {
 
   //useEffect
   useEffect(() => {
-    loadProfile();
-    checkUserPost();
+    loadEverything();
   }, []);
 
   //Load Profile function
@@ -30,16 +30,45 @@ function EditPost() {
       navigate("/auth/login");
     } else {
       setProfile(res.data);
+      return res.data;
     }
   };
 
-  //Check editing authorization
-  const checkUserPost = async () => {
-    const res = await axios.get(`/api/auth/${postId}/edit`);
-    if (res.data.auth) {
-      setTitle("Auth true");
+  //loadPost functionality
+  const loadPost = async () => {
+    const res = await axios.get(`/api/posts/${postId}`);
+    if (res.data.error) {
+      setError(res.data.error);
     } else {
-      return navigate(`/post/${postId}`);
+      setTitle(res.data.title);
+      setDescription(res.data.body);
+      return res.data;
+    }
+  };
+
+  //Load Everything function
+  const loadEverything = async () => {
+    const _profile = await loadProfile();
+    const _post = await loadPost();
+    if (!_profile || !_post) {
+      navigate("/");
+    }
+    if (_profile._id !== _post.userId) {
+      navigate(`/post/${postId}`);
+    }
+  };
+
+  //Submit edited post
+  const submitHandler = async () => {
+    const res = await axios.put(`/api/posts/${postId}`, {
+      title: title,
+      description: description,
+    });
+    if (res.data.error) {
+      setError("");
+    } else {
+      setStatusOfPost(res.data.statusMsg);
+      setTimeout(navigate(`/post/${postId}`), 2000);
     }
   };
 
@@ -99,7 +128,11 @@ function EditPost() {
           ></textarea>
           {/* Submit Button */}
           <div className={styles.submitBtnContainer}>
-            <button className={styles.submitPostBtn} disabled={btnDisabled}>
+            <button
+              className={styles.submitPostBtn}
+              disabled={btnDisabled}
+              onClick={submitHandler}
+            >
               Submit
             </button>
           </div>
@@ -107,6 +140,10 @@ function EditPost() {
         {/* Status Message */}
         <div className={styles.statusMsgContainer}>
           <h1 className={styles.statusMsgTitle}>{statusOfPost}</h1>
+        </div>
+        {/* Errors */}
+        <div className={styles.errorCtn}>
+          <h1>{error}</h1>
         </div>
       </div>
     </div>
