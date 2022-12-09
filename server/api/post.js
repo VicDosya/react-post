@@ -86,16 +86,21 @@ app.get("/:postId", async (req, res) => {
 //Edit post data
 app.put("/:postId", async (req, res) => {
   try {
-    const post = await Post.findByIdAndUpdate(req.params.postId, {
-      title: req.body.title,
-      body: req.body.description,
+    const post = await Post.findOne({
+      _id: req.params.postId,
+      userId: req.session.user._id,
     });
+
     if (!post) {
       return res.send({ error: "Post is not found" });
     } else {
+      post.title = req.body.title;
+      post.body = req.body.description;
+      await post.save();
       res.send({ statusMsg: "Post edit is submitted" });
     }
   } catch (err) {
+    console.log(err);
     res.send({ error: "Something went wrong" });
   }
 });

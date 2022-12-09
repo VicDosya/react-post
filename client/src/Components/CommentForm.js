@@ -14,13 +14,12 @@ function CommentForm({ postId, loadComments }) {
     const res = await axios.post(`/api/posts/${postId}/comment`, { comment });
     if (res.data.error) {
       setError(res.data.error);
-      setbtnDisabled(false);
     } else {
       setComment("");
       loadComments();
       setError("");
-      setbtnDisabled(false);
     }
+    setbtnDisabled(false);
   };
 
   return (
@@ -37,7 +36,11 @@ function CommentForm({ postId, loadComments }) {
           ></textarea>
         </div>
         <div className={styles.submitBtnCtn}>
-          <button onClick={submitComment} className={styles.submitCommentBtn} disabled={btnDisabled}>
+          <button
+            onClick={submitComment}
+            className={styles.submitCommentBtn}
+            disabled={btnDisabled}
+          >
             Submit
           </button>
           <div className={styles.errorStatus}>{error}</div>

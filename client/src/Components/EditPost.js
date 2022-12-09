@@ -48,6 +48,7 @@ function EditPost() {
 
   //Load Everything function
   const loadEverything = async () => {
+    setBtnDisabled(true);
     const _profile = await loadProfile();
     const _post = await loadPost();
     if (!_profile || !_post) {
@@ -56,20 +57,23 @@ function EditPost() {
     if (_profile._id !== _post.userId) {
       navigate(`/post/${postId}`);
     }
+    setBtnDisabled(false);
   };
 
   //Submit edited post
   const submitHandler = async () => {
+    setBtnDisabled(true);
     const res = await axios.put(`/api/posts/${postId}`, {
       title: title,
       description: description,
     });
     if (res.data.error) {
-      setError("");
+      setError(res.data.error);
     } else {
       setStatusOfPost(res.data.statusMsg);
       setTimeout(navigate(`/post/${postId}`), 2000);
     }
+    setBtnDisabled(false);
   };
 
   //Logout function
