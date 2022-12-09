@@ -1,5 +1,6 @@
 import express from "express";
 import UserDetails from "../Schemas/UserDetails";
+import Post from "../Schemas/Post";
 const app = express();
 
 //Authentication

@@ -8,6 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("");
+  const [btnDisabled, setbtnDisabled] = useState(false);
 
   //useEffect
   useEffect(() => {
@@ -32,6 +33,7 @@ function Login() {
     });
     setStatus(res.data.status);
     if (!res.data.error) {
+      setbtnDisabled(true);
       setEmail("");
       setPassword("");
       setTimeout(goHomePage, 2000);
@@ -89,7 +91,7 @@ function Login() {
         </div>
         {/* Button */}
         <div className={styles.btnCtn}>
-          <button onClick={handleSubmit} className={styles.submitBtn}>
+          <button onClick={handleSubmit} className={styles.submitBtn} disabled={btnDisabled}>
             Submit
           </button>
         </div>

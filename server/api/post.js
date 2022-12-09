@@ -14,6 +14,7 @@ app.get("/", async (req, res) => {
 app.post("/", async (req, res) => {
   console.log(req.session.user);
   const post = new Post({
+    userId: req.session.user._id,
     title: req.body.title,
     body: req.body.body,
     author: req.session.user.fname + " " + req.session.user.lname,
@@ -63,6 +64,44 @@ app.get("/:postId/comments", async (req, res) => {
     res.send({ comments });
   } catch (err) {
     res.send({ error: "Invalid id" });
+  }
+});
+
+//Send post data upon editing
+app.get("/:postId", async (req, res) => {
+  try {
+    const post = await Post.find({
+      _id: req.params.postId,
+    });
+    if (!post) {
+      return res.send({ error: "Post not found." });
+    } else {
+      res.send({ post });
+    }
+  } catch (err) {
+    res.send({ error: "Invalid post" });
+  }
+});
+
+//Edit post data
+app.put("/:postId", async (req, res) => {
+  try {
+    const post = await Post.findOne({
+      _id: req.params.postId,
+      userId: req.session.user._id,
+    });
+
+    if (!post) {
+      return res.send({ error: "Post is not found" });
+    } else {
+      post.title = req.body.title;
+      post.body = req.body.description;
+      await post.save();
+      res.send({ statusMsg: "Post edit is submitted" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "Something went wrong" });
   }
 });
 
