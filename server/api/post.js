@@ -70,13 +70,9 @@ app.get("/:postId/comments", async (req, res) => {
 
 //Get all amount of comments of the individual post
 app.get("/:postId/comments/all", async (req, res) => {
-  console.log(req.params.postId);
   const post = await Post.find({
     _id: req.params.postId,
   });
-  // const comments = await Comment.find({
-  //   post: req.params.postId,
-  // });
   if (post) {
     res.send(0);
   } else {
