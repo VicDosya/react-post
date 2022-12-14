@@ -47,8 +47,9 @@ app.post("/:postId/comment", async (req, res) => {
       body: req.body.comment,
       author: req.session.user.fname + " " + req.session.user.lname,
     });
-
     await comment.save();
+    post.commentsCount++;
+    await post.save();
     console.log(req.body.comment);
     console.log(req.params.postId);
     res.send({ statusMsg: "Comment submitted!" });
@@ -64,6 +65,18 @@ app.get("/:postId/comments", async (req, res) => {
     res.send({ comments });
   } catch (err) {
     res.send({ error: "Invalid id" });
+  }
+});
+
+//Get all amount of comments of the individual post
+app.get("/:postId/comments/all", async (req, res) => {
+  const post = await Post.find({
+    _id: req.params.postId,
+  });
+  if (post) {
+    res.send(0);
+  } else {
+    res.send({ error: "Post not found." });
   }
 });
 

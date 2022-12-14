@@ -21,7 +21,10 @@ const PostSchema = new mongoose.Schema({
   createdAt: {
     type: String,
     default: Date,
-    required: true,
+  },
+  commentsCount: {
+    type: Number,
+    default: 0,
   },
 });
 
