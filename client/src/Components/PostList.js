@@ -14,6 +14,7 @@ function PostList({ posts }) {
             body={post.body}
             author={post.author}
             postDate={post.createdAt}
+            commentsCount={post.commentsCount}
             key={key}
           ></Post>
         ))}

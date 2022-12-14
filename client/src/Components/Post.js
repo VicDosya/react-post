@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "./Post.module.css";
 import TimeAgo from "react-timeago";
 
-function Post({ id, title, body, author, postDate }) {
+function Post({ id, title, body, author, postDate, commentsCount }) {
   //Navigate inside a post functionality and send its post data inside it.
   let navigate = useNavigate();
   const goToPost = () => {
@@ -34,6 +34,8 @@ function Post({ id, title, body, author, postDate }) {
           <div className={styles.authorCtn}>
             Post author: <span className={styles.postAuthor}>{author}</span>
           </div>
+          {/* Comments quantity */}
+          <div className={styles.commentsCtn}>Comments: {commentsCount}</div>
           {/* Date */}
           <div className={styles.postDateTime}>
             Posted: <TimeAgo date={postDate} />
