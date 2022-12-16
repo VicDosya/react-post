@@ -89,29 +89,12 @@ function PostPage({ posts }) {
     }
   };
 
-  //Send vote up to the server
-  const handleVoteUp = async () => {
+  //Send a vote to the server
+  const handleVote = async (num) => {
     setVoteUpDisabled(true);
     setVoteDownDisabled(true);
-    const res = await axios.post(`/api/posts/${postId}/votes/up`, {
-      vote: "Vote up",
-    });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
-      setError("");
-      getAllVotes();
-      setVoteUpDisabled(false);
-      setVoteDownDisabled(false);
-    }
-  };
-
-  //Send vote down to the server
-  const handleVoteDown = async () => {
-    setVoteUpDisabled(true);
-    setVoteDownDisabled(true);
-    const res = await axios.post(`/api/posts/${postId}/votes/down`, {
-      vote: "Vote down",
+    const res = await axios.post(`/api/posts/${postId}/votes`, {
+      vote: num,
     });
     if (res.data.error) {
       setError(res.data.error);
@@ -169,14 +152,14 @@ function PostPage({ posts }) {
           <span className={styles.upAmount}>{voteUp}</span>
           <div
             className={styles.voteUp}
-            onClick={handleVoteUp}
+            onClick={() => handleVote(1)}
             disabled={voteUpDisabled}
           >
             👍
           </div>
           <div
             className={styles.voteDown}
-            onClick={handleVoteDown}
+            onClick={() => handleVote(-1)}
             disabled={voteDownDisabled}
           >
             👎

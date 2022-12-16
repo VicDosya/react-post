@@ -2,8 +2,7 @@ import express from "express";
 import Post from "../Schemas/Post";
 import Comment from "../Schemas/Comment";
 import UserDetails from "../Schemas/UserDetails";
-import VoteUp from "../Schemas/VoteUp";
-import VoteDown from "../Schemas/VoteDown";
+import PostVote from "../Schemas/PostVote";
 const app = express();
 
 //Send back all the posts
@@ -127,13 +126,15 @@ app.get("/:postId/votes", async (req, res) => {
       _id: req.params.postId,
     });
     if (!post) {
-      res.send({ error: "Post not found." });
+      return res.send({ error: "Post not found." });
     } else {
-      const votesUpCount = await VoteUp.countDocuments({
+      const votesUpCount = await PostVote.countDocuments({
         post: req.params.postId,
+        vote: 1,
       });
-      const votesDownCount = await VoteDown.countDocuments({
+      const votesDownCount = await PostVote.countDocuments({
         post: req.params.postId,
+        vote: -1,
       });
       res.send({
         votesUpCount,
@@ -146,71 +147,37 @@ app.get("/:postId/votes", async (req, res) => {
   }
 });
 
-//Handle vote up a post from the client
-app.post("/:postId/votes/up", async (req, res) => {
+//Handle votes from the client
+app.post("/:postId/votes", async (req, res) => {
   const post = await Post.findById(req.params.postId);
-  //Check if user vote up this post
-  const didVoteUp = await VoteUp.findOne({
-    userId: req.session.user._id,
-    post: req.params.postId,
-  });
-  //Check if user vote down this post
-  const didVoteDown = await VoteDown.findOne({
-    userId: req.session.user._id,
-    post: req.params.postId,
-  });
   if (!post) {
-    res.send({ error: "Post is not found." });
-  } else if (didVoteUp) {
-    res.send({ error: "You already voted up" });
-  } else {
-    if (didVoteDown) {
-      await VoteDown.deleteOne({
-        userId: req.session.user._id,
-        post: req.params.postId,
-      });
-    }
-    const voteUp = new VoteUp({
-      userId: req.session.user._id,
-      post: req.params.postId,
-    });
-    voteUp.votes++;
-    await voteUp.save();
-    res.send({ statusMsg: "Vote have been submitted!" });
+    return res.send({ error: "Post is not found." });
   }
-});
 
-//Handle vote down a post from the client
-app.post("/:postId/votes/down", async (req, res) => {
-  const post = await Post.findById(req.params.postId);
-  //Check if user vote down this post
-  const didVoteDown = await VoteDown.findOne({
+  //If client already have made a vote
+  const alreadyVoted = await PostVote.findOne({
     userId: req.session.user._id,
     post: req.params.postId,
   });
-  //Check if user vote up this post
-  const didVoteUp = await VoteUp.findOne({
-    userId: req.session.user._id,
-    post: req.params.postId,
-  });
-  if (!post) {
-    res.send({ error: "Post is not found." });
-  } else if (didVoteDown) {
-    res.send({ error: "You already voted Down" });
-  } else {
-    if (didVoteUp) {
-      await VoteUp.deleteOne({
+  //Client will not be able to send a vote number besides 1 or -1.
+  const validVoteNum = req.body.vote === 1 || req.body.vote === -1;
+
+  if (validVoteNum) {
+    if (alreadyVoted) {
+      alreadyVoted.vote = req.body.vote;
+      await alreadyVoted.save();
+      return res.send({ statusMsg: "Vote has been changed." });
+    } else if (!alreadyVoted) {
+      const vote = new PostVote({
         userId: req.session.user._id,
         post: req.params.postId,
       });
+      vote.vote = req.body.vote;
+      await vote.save();
+      res.send({ statusMsg: "Voted!" });
     }
-    const voteDown = new VoteDown({
-      userId: req.session.user._id,
-      post: req.params.postId,
-    });
-    voteDown.votes++;
-    await voteDown.save();
-    res.send({ statusMsg: "Vote have been submitted!" });
+  } else {
+    return res.send({ error: "Vote has not been made." });
   }
 });
 

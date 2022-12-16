@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const VoteUpSchema = new mongoose.Schema({
+const PostVoteSchema = new mongoose.Schema({
   userId: {
     type: String,
     required: true,
@@ -9,10 +9,10 @@ const VoteUpSchema = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: "post",
   },
-  votes: {
+  vote: {
     type: Number,
     default: 0,
   },
 });
 
-export default mongoose.model("voteUp", VoteUpSchema);
+export default mongoose.model("vote", PostVoteSchema);
