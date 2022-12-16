@@ -149,17 +149,14 @@ app.get("/:postId/votes", async (req, res) => {
 
 //Handle votes from the client
 app.post("/:postId/votes", async (req, res) => {
-  //Validate if post exists
-  const post = await Post.findById(req.params.postId);
-  if (!post) {
-    return res.send({ error: "Post is not found." });
+  //Validate if the client is authorized
+  if (!req.session.user) {
+    return res.send({ error: "You are not logged in to vote." });
   }
-
   //Validate if the vote is 1 or -1 and nothing else
   if (req.body.vote !== 1 && req.body.vote !== -1) {
     res.send({ error: "Vote is not valid." });
   }
-
   //Validate if vote has been already made
   const alreadyVoted = await PostVote.findOne({
     userId: req.session.user._id,
@@ -169,6 +166,11 @@ app.post("/:postId/votes", async (req, res) => {
     alreadyVoted.vote = req.body.vote;
     await alreadyVoted.save();
     return res.send({ statusMsg: "Vote has been changed." });
+  }
+  //Validate if post exists
+  const post = await Post.findById(req.params.postId);
+  if (!post) {
+    return res.send({ error: "Post is not found." });
   } else {
     const vote = new PostVote({
       userId: req.session.user._id,
