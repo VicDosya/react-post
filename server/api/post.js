@@ -149,35 +149,34 @@ app.get("/:postId/votes", async (req, res) => {
 
 //Handle votes from the client
 app.post("/:postId/votes", async (req, res) => {
+  //Validate if post exists
   const post = await Post.findById(req.params.postId);
   if (!post) {
     return res.send({ error: "Post is not found." });
   }
 
-  //If client already have made a vote
+  //Validate if the vote is 1 or -1 and nothing else
+  if (req.body.vote !== 1 && req.body.vote !== -1) {
+    res.send({ error: "Vote is not valid." });
+  }
+
+  //Validate if vote has been already made
   const alreadyVoted = await PostVote.findOne({
     userId: req.session.user._id,
     post: req.params.postId,
   });
-  //Client will not be able to send a vote number besides 1 or -1.
-  const validVoteNum = req.body.vote === 1 || req.body.vote === -1;
-
-  if (validVoteNum) {
-    if (alreadyVoted) {
-      alreadyVoted.vote = req.body.vote;
-      await alreadyVoted.save();
-      return res.send({ statusMsg: "Vote has been changed." });
-    } else if (!alreadyVoted) {
-      const vote = new PostVote({
-        userId: req.session.user._id,
-        post: req.params.postId,
-      });
-      vote.vote = req.body.vote;
-      await vote.save();
-      res.send({ statusMsg: "Voted!" });
-    }
+  if (alreadyVoted) {
+    alreadyVoted.vote = req.body.vote;
+    await alreadyVoted.save();
+    return res.send({ statusMsg: "Vote has been changed." });
   } else {
-    return res.send({ error: "Vote has not been made." });
+    const vote = new PostVote({
+      userId: req.session.user._id,
+      post: req.params.postId,
+    });
+    vote.vote = req.body.vote;
+    await vote.save();
+    res.send({ statusMsg: "Voted!" });
   }
 });
 
