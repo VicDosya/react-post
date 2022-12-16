@@ -171,15 +171,14 @@ app.post("/:postId/votes", async (req, res) => {
     alreadyVoted.vote = req.body.vote;
     await alreadyVoted.save();
     return res.send({ statusMsg: "Vote has been changed." });
-  } else {
-    const vote = new PostVote({
-      userId: req.session.user._id,
-      post: req.params.postId,
-    });
-    vote.vote = req.body.vote;
-    await vote.save();
-    res.send({ statusMsg: "Voted!" });
   }
+  const vote = new PostVote({
+    userId: req.session.user._id,
+    post: req.params.postId,
+  });
+  vote.vote = req.body.vote;
+  await vote.save();
+  res.send({ statusMsg: "Voted!" });
 });
 
 export default app;
