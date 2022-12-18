@@ -55,19 +55,18 @@ app.post("/:postId/comment", async (req, res) => {
   const post = await Post.findById(req.params.postId);
   if (!post) {
     return res.send({ error: "Invalid post" });
-  } else {
-    const comment = new Comment({
-      post: req.params.postId,
-      body: req.body.comment,
-      author: req.session.user.fname + " " + req.session.user.lname,
-    });
-    await comment.save();
-    post.commentsCount++;
-    await post.save();
-    console.log(req.body.comment);
-    console.log(req.params.postId);
-    res.send({ statusMsg: "Comment submitted!" });
   }
+  const comment = new Comment({
+    post: req.params.postId,
+    body: req.body.comment,
+    author: req.session.user.fname + " " + req.session.user.lname,
+  });
+  await comment.save();
+  post.commentsCount++;
+  await post.save();
+  console.log(req.body.comment);
+  console.log(req.params.postId);
+  res.send({ statusMsg: "Comment submitted!" });
 });
 
 //Get the comments of the individual post
@@ -111,9 +110,8 @@ app.get("/:postId", async (req, res) => {
     });
     if (!post) {
       return res.send({ error: "Post not found." });
-    } else {
-      res.send({ post });
     }
+    res.send({ post });
   } catch (err) {
     res.send({ error: "Invalid post" });
   }
@@ -132,12 +130,11 @@ app.put("/:postId", async (req, res) => {
 
     if (!post) {
       return res.send({ error: "Post is not found" });
-    } else {
-      post.title = req.body.title;
-      post.body = req.body.description;
-      await post.save();
-      res.send({ statusMsg: "Post edit is submitted" });
     }
+    post.title = req.body.title;
+    post.body = req.body.description;
+    await post.save();
+    res.send({ statusMsg: "Post edit is submitted" });
   } catch (err) {
     console.log(err);
     res.send({ error: "Something went wrong" });
@@ -155,20 +152,19 @@ app.get("/:postId/votes", async (req, res) => {
     });
     if (!post) {
       return res.send({ error: "Post not found." });
-    } else {
-      const votesUpCount = await PostVote.countDocuments({
-        post: req.params.postId,
-        vote: 1,
-      });
-      const votesDownCount = await PostVote.countDocuments({
-        post: req.params.postId,
-        vote: -1,
-      });
-      res.send({
-        votesUpCount,
-        votesDownCount,
-      });
     }
+    const votesUpCount = await PostVote.countDocuments({
+      post: req.params.postId,
+      vote: 1,
+    });
+    const votesDownCount = await PostVote.countDocuments({
+      post: req.params.postId,
+      vote: -1,
+    });
+    res.send({
+      votesUpCount,
+      votesDownCount,
+    });
   } catch (err) {
     console.log(err);
     res.send({ error: "Something went wrong with the voting system." });
