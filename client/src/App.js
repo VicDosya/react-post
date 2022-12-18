@@ -5,6 +5,7 @@ import Auth from "./Components/Auth";
 import PostPage from "./Components/PostPage";
 import HomePage from "./Components/HomePage";
 import EditPost from "./Components/EditPost";
+import EditComment from "./Components/EditComment";
 
 function App() {
   //useState Variables
@@ -33,6 +34,7 @@ function App() {
       {/* Inside each post: :postId is used as useParams in PostPage*/}
       <Route path="/post/:postId" element={<PostPage />}></Route>
       <Route path="/post/:postId/edit" element={<EditPost />}></Route>
+      <Route path="/post/:postId/comment/:commentId" element={<EditComment />}></Route>
     </Routes>
   );
 }

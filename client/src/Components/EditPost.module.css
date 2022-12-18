@@ -24,6 +24,25 @@
   border-top: 2px solid rgb(217, 119, 119);
 }
 
+.deleteBtn {
+  font-family: "Open Sans", sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  border: 1px solid hsl(0, 64%, 43%);
+  border-top: 2px solid rgb(255, 144, 144);
+  border-radius: 3px;
+  width: 100px;
+  height: 35px;
+  background-color: hsl(0, 70%, 51%);
+}
+
+.deleteBtn:hover {
+  cursor: pointer;
+  background-color: hsl(0, 60%, 45%);
+  border-top: 2px solid rgb(222, 109, 109);
+}
+
 html {
   background-image: linear-gradient(to top, #4481eb 0%, #04befe 100%);
   background-attachment: fixed;

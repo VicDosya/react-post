@@ -37,7 +37,7 @@
 .commentCtn {
   display: flex;
   width: 90%;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin-top: 10px;
   word-wrap: break-word;
 }
@@ -46,6 +46,20 @@
   font-family: "Archivo", sans-serif;
   color: #222222;
   word-wrap: break-word;
+}
+
+.modifyBtn {
+  font-family: "Archivo", sans-serif;
+  border: none;
+  color: hsl(206, 89%, 45%);
+  background-color: transparent;
+  text-decoration: underline;
+}
+.modifyBtn:hover {
+  cursor: pointer;
+  color: hsl(206, 88%, 37%);
+  background-color: #d6d6d6;
+  border-radius: 5px;
 }
 
 .dateCtn {

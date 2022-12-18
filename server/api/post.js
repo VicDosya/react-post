@@ -58,6 +58,7 @@ app.post("/:postId/comment", async (req, res) => {
   }
   const comment = new Comment({
     post: req.params.postId,
+    userId: req.session.user._id,
     body: req.body.comment,
     author: req.session.user.fname + " " + req.session.user.lname,
   });
@@ -96,6 +97,117 @@ app.get("/:postId/comments/all", async (req, res) => {
     res.send(0);
   } else {
     res.send({ error: "Post not found." });
+  }
+});
+
+//Edit a comment by clicking edit
+app.get("/:postId/comments/:commentId", async (req, res) => {
+  if (!req.session.user) {
+    return res.send({ error: "You are not logged in." });
+  }
+
+  const post = await Post.find({
+    _id: req.params.postId,
+    userId: req.session.user._id,
+  });
+  if (!post) {
+    return res.send({ error: "Post is not found." });
+  }
+
+  const comment = await Comment.find({
+    _id: req.params.commentId,
+    post: req.params.postId,
+    userId: req.session.user._id,
+  });
+  if (!comment) {
+    return res.send({ error: "Comment not found." });
+  }
+  res.send({ auth: true });
+});
+
+//Send back comment data upon editing
+app.get("/:postId/comments/:commentId/edit", async (req, res) => {
+  if (!req.session.user) {
+    return res.send({ error: "You are not logged in." });
+  }
+  const post = await Post.find({
+    _id: req.params.postId,
+  });
+  if (!post) {
+    return res.send({ error: "Post not found." });
+  }
+  const comment = await Comment.findOne({
+    _id: req.params.commentId,
+    post: req.params.postId,
+    userId: req.session.user._id,
+  });
+  if (comment.userId !== req.session.user._id) {
+    return res.send({ error: "You are not the owner of this comment." });
+  }
+  res.send(comment.body);
+});
+
+//Submit edited comment
+app.put("/:postId/comments/:commentId", async (req, res) => {
+  if (!req.session.user) {
+    return res.send({ error: "You are not logged in." });
+  }
+  const post = await Post.find({
+    _id: req.params.postId,
+  });
+  if (!post) {
+    return res.send({ error: "Post not found." });
+  }
+  const comment = await Comment.findOne({
+    _id: req.params.commentId,
+    post: req.params.postId,
+    userId: req.session.user._id,
+  });
+  if (!comment) {
+    return res.send({ error: "Comment not found." });
+  }
+  try {
+    comment.body = req.body.comment;
+    await comment.save();
+    res.send({ statusMsg: "Comment edit submitted!" });
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "Something went wrong." });
+  }
+});
+
+//Delete a comment
+app.delete("/:postId/comments/:commentId", async (req, res) => {
+  if (!req.session.user) {
+    return res.send({ error: "You are not logged in." });
+  }
+  const post = await Post.findOne({
+    _id: req.params.postId,
+  });
+  if (!post) {
+    return res.send({ error: "Post not found." });
+  }
+  const comment = await Comment.findOne({
+    _id: req.params.commentId,
+    post: req.params.postId,
+    userId: req.session.user._id,
+  });
+  if (!comment) {
+    return res.send({ error: "Comment not found." });
+  }
+  if (req.session.user._id !== comment.userId) {
+    return res.send({ error: "You are not the owner of this comment." });
+  }
+  try {
+    await Comment.deleteOne({
+      _id: req.params.commentId,
+      post: req.params.postId,
+      userId: req.session.user._id,
+    });
+    res.send({ statusMsg: "Comment has been deleted." });
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "Error deleting the comment." });
   }
 });
 
@@ -141,10 +253,37 @@ app.put("/:postId", async (req, res) => {
   }
 });
 
+//Delete a post
+app.delete("/:postId", async (req, res) => {
+  if (!req.session.user) {
+    return res.send({ error: "You are not logged in." });
+  }
+  const post = await Post.findOne({
+    _id: req.params.postId,
+    userId: req.session.user._id,
+  });
+  if (!post) {
+    return res.send({ error: "Post does not exist." });
+  }
+  if (post.userId !== req.session.user._id) {
+    return res.send({ error: "You are not the owner of the post!" });
+  }
+  try {
+    await Post.deleteOne({
+      _id: req.params.postId,
+      userId: req.session.user._id,
+    });
+    res.send({ statusMsg: "Post deleted!" });
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "Error deleting the post." });
+  }
+});
+
 //Send all votes to the client
 app.get("/:postId/votes", async (req, res) => {
   if (!req.session.user) {
-    return req.send({ error: "You are not logged in." });
+    return res.send({ error: "You are not logged in." });
   }
   try {
     const post = await Post.findOne({

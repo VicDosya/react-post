@@ -73,6 +73,21 @@ function PostPage({ posts }) {
     }
   };
 
+  //Delete a comment - commentId parameter is from Comment.js fired by button click.
+  const deleteComment = async (commentId) => {
+    const res = await axios.delete(
+      `/api/posts/${postId}/comments/${commentId}`
+    );
+    if (res.data.error) {
+      setError(res.data.error);
+    } else {
+      const filteredComments = comments.filter(
+        (comment) => comment.commentId === commentId
+      );
+      setComments(filteredComments);
+    }
+  };
+
   //Get all votes for this post
   const getAllVotes = async () => {
     setVoteUpDisabled(true);
@@ -135,7 +150,7 @@ function PostPage({ posts }) {
         </div>
         {/* Edit post button */}
         <div>
-          {/* Post displayed only if the user is the author of the post */}
+          {/*Edit Post displayed only if the user is the author of the post */}
           {profile?._id === post.userId && (
             <button
               onClick={handleEditPost}
@@ -196,7 +211,11 @@ function PostPage({ posts }) {
       </div>
       {/* Comments List */}
       <div>
-        <CommentList comments={comments} />
+        <CommentList
+          comments={comments}
+          postId={postId}
+          onDelete={deleteComment}
+        />
       </div>
     </div>
   );
