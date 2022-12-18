@@ -42,10 +42,51 @@
   background-color: hsl(0, 60%, 45%);
   border-top: 2px solid rgb(222, 109, 109);
 }
+.votingCtn {
+  width: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.voteUp,
+.voteDown {
+  font-size: 25px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.voteUp:hover,
+.voteDown:hover {
+  cursor: pointer;
+  background-color: #e7e7e7;
+  border-radius: 5px;
+}
+
+.voteUp:active,
+.voteDown:active {
+  font-size: 24px;
+  transition: 0.5s;
+}
+
+.upAmount,
+.downAmount {
+  font-size: 15px;
+  font-weight: bold;
+  font-family: "Open Sans", sans-serif;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.upAmount {
+  color: rgb(109, 168, 109);
+}
+.downAmount {
+  color: rgb(180, 98, 98);
+}
+
 .cardStyle {
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
   margin: 0 auto;
   align-items: center;
   border: 1px solid rgb(217, 217, 217);
@@ -93,6 +134,7 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
+  margin-top: 30px;
 }
 
 .postDateTime {

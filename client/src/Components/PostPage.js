@@ -14,6 +14,10 @@ function PostPage({ posts }) {
   const [error, setError] = useState("");
   const [profile, setProfile] = useState(null);
   const [btnDisabled, setbtnDisabled] = useState(false);
+  const [voteUpDisabled, setVoteUpDisabled] = useState(false);
+  const [voteDownDisabled, setVoteDownDisabled] = useState(false);
+  const [voteUp, setVoteUp] = useState(0);
+  const [voteDown, setVoteDown] = useState(0);
 
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
@@ -23,6 +27,7 @@ function PostPage({ posts }) {
     loadProfile();
     loadPost();
     loadComments();
+    getAllVotes();
   }, []);
 
   //Load Profile function
@@ -68,6 +73,39 @@ function PostPage({ posts }) {
     }
   };
 
+  //Get all votes for this post
+  const getAllVotes = async () => {
+    setVoteUpDisabled(true);
+    setVoteDownDisabled(true);
+    const res = await axios.get(`/api/posts/${postId}/votes`);
+    if (res.data.error) {
+      setError(res.data.error);
+    } else {
+      setError("");
+      setVoteUp(res.data.votesUpCount);
+      setVoteDown(res.data.votesDownCount);
+      setVoteUpDisabled(false);
+      setVoteDownDisabled(false);
+    }
+  };
+
+  //Send a vote to the server
+  const handleVote = async (num) => {
+    setVoteUpDisabled(true);
+    setVoteDownDisabled(true);
+    const res = await axios.post(`/api/posts/${postId}/votes`, {
+      vote: num,
+    });
+    if (res.data.error) {
+      setError(res.data.error);
+    } else {
+      setError("");
+      getAllVotes();
+      setVoteUpDisabled(false);
+      setVoteDownDisabled(false);
+    }
+  };
+
   //Go back to all posts navigation function
   let navigate = useNavigate();
   const goBackRoute = () => {
@@ -110,6 +148,24 @@ function PostPage({ posts }) {
         </div>
       </div>
       <div className={styles.cardStyle}>
+        <div className={styles.votingCtn}>
+          <span className={styles.upAmount}>{voteUp}</span>
+          <div
+            className={styles.voteUp}
+            onClick={() => handleVote(1)}
+            disabled={voteUpDisabled}
+          >
+            👍
+          </div>
+          <div
+            className={styles.voteDown}
+            onClick={() => handleVote(-1)}
+            disabled={voteDownDisabled}
+          >
+            👎
+          </div>
+          <span className={styles.downAmount}>{voteDown}</span>
+        </div>
         <div className={styles.alignPostContent}>
           {/* Title */}
           <h1 className={styles.postTitle}>{post.title}</h1>
@@ -131,6 +187,7 @@ function PostPage({ posts }) {
           </div>
         </div>
       </div>
+
       {/* Post a comment */}
       <CommentForm postId={postId} loadComments={loadComments} />
       {/* Errors */}
