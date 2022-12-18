@@ -19,33 +19,31 @@ app.get("/", async (req, res) => {
 app.post("/", async (req, res) => {
   if (!req.session.user) {
     return res.send({ error: "You are not logged in." });
-  } else {
-    console.log(req.session.user);
-    const post = new Post({
-      userId: req.session.user._id,
-      title: req.body.title,
-      body: req.body.body,
-      author: req.session.user.fname + " " + req.session.user.lname,
-    });
-    await post.save(); //Updates the document in the DB.
-    res.send({ statusMsg: "Submitted!" });
   }
+  console.log(req.session.user);
+  const post = new Post({
+    userId: req.session.user._id,
+    title: req.body.title,
+    body: req.body.body,
+    author: req.session.user.fname + " " + req.session.user.lname,
+  });
+  await post.save(); //Updates the document in the DB.
+  res.send({ statusMsg: "Submitted!" });
 });
 
 //Send back individual post
 app.get("/:postId", async (req, res) => {
   if (!req.session.user) {
     return res.send({ error: "You are not logged in." });
-  } else {
-    try {
-      const post = await Post.findById(req.params.postId);
-      if (!post) {
-        return res.send({ error: "Post not found." });
-      }
-      res.send(post);
-    } catch (err) {
-      res.send({ error: "Invalid id" });
+  }
+  try {
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.send({ error: "Post not found." });
     }
+    res.send(post);
+  } catch (err) {
+    res.send({ error: "Invalid id" });
   }
 });
 
@@ -76,15 +74,14 @@ app.post("/:postId/comment", async (req, res) => {
 app.get("/:postId/comments", async (req, res) => {
   if (!req.session.user) {
     return res.send({ error: "You are not logged in." });
-  } else {
-    try {
-      const comments = await Comment.find({
-        post: req.params.postId,
-      });
-      res.send({ comments });
-    } catch (err) {
-      res.send({ error: "Invalid id" });
-    }
+  }
+  try {
+    const comments = await Comment.find({
+      post: req.params.postId,
+    });
+    res.send({ comments });
+  } catch (err) {
+    res.send({ error: "Invalid id" });
   }
 });
 
@@ -92,15 +89,14 @@ app.get("/:postId/comments", async (req, res) => {
 app.get("/:postId/comments/all", async (req, res) => {
   if (!req.session.user) {
     return res.send({ error: "You are not logged in." });
+  }
+  const post = await Post.find({
+    _id: req.params.postId,
+  });
+  if (post) {
+    res.send(0);
   } else {
-    const post = await Post.find({
-      _id: req.params.postId,
-    });
-    if (post) {
-      res.send(0);
-    } else {
-      res.send({ error: "Post not found." });
-    }
+    res.send({ error: "Post not found." });
   }
 });
 
@@ -108,19 +104,18 @@ app.get("/:postId/comments/all", async (req, res) => {
 app.get("/:postId", async (req, res) => {
   if (!req.session.user) {
     return res.send({ error: "You are not logged in." });
-  } else {
-    try {
-      const post = await Post.find({
-        _id: req.params.postId,
-      });
-      if (!post) {
-        return res.send({ error: "Post not found." });
-      } else {
-        res.send({ post });
-      }
-    } catch (err) {
-      res.send({ error: "Invalid post" });
+  }
+  try {
+    const post = await Post.find({
+      _id: req.params.postId,
+    });
+    if (!post) {
+      return res.send({ error: "Post not found." });
+    } else {
+      res.send({ post });
     }
+  } catch (err) {
+    res.send({ error: "Invalid post" });
   }
 });
 
@@ -128,25 +123,24 @@ app.get("/:postId", async (req, res) => {
 app.put("/:postId", async (req, res) => {
   if (!req.session.user) {
     return res.send({ error: "You are not logged in." });
-  } else {
-    try {
-      const post = await Post.findOne({
-        _id: req.params.postId,
-        userId: req.session.user._id,
-      });
+  }
+  try {
+    const post = await Post.findOne({
+      _id: req.params.postId,
+      userId: req.session.user._id,
+    });
 
-      if (!post) {
-        return res.send({ error: "Post is not found" });
-      } else {
-        post.title = req.body.title;
-        post.body = req.body.description;
-        await post.save();
-        res.send({ statusMsg: "Post edit is submitted" });
-      }
-    } catch (err) {
-      console.log(err);
-      res.send({ error: "Something went wrong" });
+    if (!post) {
+      return res.send({ error: "Post is not found" });
+    } else {
+      post.title = req.body.title;
+      post.body = req.body.description;
+      await post.save();
+      res.send({ statusMsg: "Post edit is submitted" });
     }
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "Something went wrong" });
   }
 });
 
@@ -154,31 +148,30 @@ app.put("/:postId", async (req, res) => {
 app.get("/:postId/votes", async (req, res) => {
   if (!req.session.user) {
     return req.send({ error: "You are not logged in." });
-  } else {
-    try {
-      const post = await Post.findOne({
-        _id: req.params.postId,
+  }
+  try {
+    const post = await Post.findOne({
+      _id: req.params.postId,
+    });
+    if (!post) {
+      return res.send({ error: "Post not found." });
+    } else {
+      const votesUpCount = await PostVote.countDocuments({
+        post: req.params.postId,
+        vote: 1,
       });
-      if (!post) {
-        return res.send({ error: "Post not found." });
-      } else {
-        const votesUpCount = await PostVote.countDocuments({
-          post: req.params.postId,
-          vote: 1,
-        });
-        const votesDownCount = await PostVote.countDocuments({
-          post: req.params.postId,
-          vote: -1,
-        });
-        res.send({
-          votesUpCount,
-          votesDownCount,
-        });
-      }
-    } catch (err) {
-      console.log(err);
-      res.send({ error: "Something went wrong with the voting system." });
+      const votesDownCount = await PostVote.countDocuments({
+        post: req.params.postId,
+        vote: -1,
+      });
+      res.send({
+        votesUpCount,
+        votesDownCount,
+      });
     }
+  } catch (err) {
+    console.log(err);
+    res.send({ error: "Something went wrong with the voting system." });
   }
 });
 
