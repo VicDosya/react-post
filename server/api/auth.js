@@ -35,16 +35,17 @@ app.post("/register", async (req, res) => {
 
   checkValidation();
 
-  //Encrypt the password
-  const salt = bcrypt.genSaltSync(10);
-  const encryptedPassword = await bcrypt.hash(req.body.password, salt);
-
   if (validInputs === true) {
+    //Encrypt the password
+    const salt = bcrypt.genSaltSync(10);
+    const encryptedPassword = await bcrypt.hash(req.body.password, salt);
+
     const user = new UserDetails({
       fname: req.body.fname,
       lname: req.body.lname,
       email: req.body.email,
       password: encryptedPassword,
+      salt: salt,
     });
     await user.save();
     res.send({ status: "Success" });
