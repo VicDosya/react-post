@@ -1,6 +1,6 @@
 import express from "express";
+import bcrypt from "bcryptjs";
 import UserDetails from "../Schemas/UserDetails";
-import Post from "../Schemas/Post";
 const app = express();
 
 //Authentication
@@ -35,12 +35,15 @@ app.post("/register", async (req, res) => {
 
   checkValidation();
 
+  //Encrypt the password
+  const encryptedPassword = await bcrypt.hash(req.body.password, 10);
+
   if (validInputs === true) {
     const user = new UserDetails({
       fname: req.body.fname,
       lname: req.body.lname,
       email: req.body.email,
-      password: req.body.password,
+      password: encryptedPassword,
     });
     await user.save();
     res.send({ status: "Success" });
@@ -61,14 +64,20 @@ app.post("/login", async (req, res) => {
   }
   const user = await UserDetails.findOne({
     email: req.body.email,
-    password: req.body.password,
   });
   if (!user) {
-    res.send({ status: "Invalid email or password.", error: true });
-  } else {
-    req.session.user = user;
-    res.send({ user, status: "Logged in, Redirecting..." });
+    return res.send({ status: "User does not exist.", error: true });
   }
+  //Decrypt the password
+  const decryptedPassword = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+  if (!decryptedPassword) {
+    return res.send({ status: "Incorrect password.", error: true });
+  }
+  req.session.user = user;
+  res.send({ user, status: "Logged in, Redirecting..." });
 });
 
 //Profile api to return to the user
