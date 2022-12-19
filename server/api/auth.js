@@ -45,7 +45,6 @@ app.post("/register", async (req, res) => {
       lname: req.body.lname,
       email: req.body.email,
       password: encryptedPassword,
-      salt: salt,
     });
     await user.save();
     res.send({ status: "Success" });
@@ -73,7 +72,7 @@ app.post("/login", async (req, res) => {
   //Decrypt the password
   const decryptedPassword = await bcrypt.compare(
     req.body.password,
-    user.password
+    user.password,
   );
   if (!decryptedPassword) {
     return res.send({ status: "Incorrect password.", error: true });

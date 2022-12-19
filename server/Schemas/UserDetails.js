@@ -18,10 +18,6 @@ const UserDetails = new mongoose.Schema({
     type: String,
     required: true,
   },
-  salt: {
-    type: String,
-    required: true,
-  },
   createdAt: {
     type: String,
     default: Date,
