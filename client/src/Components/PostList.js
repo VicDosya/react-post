@@ -17,7 +17,7 @@ function PostList({ posts }) {
             commentsCount={post.commentsCount}
             key={key}
           ></Post>
-        ))}
+        )).reverse()}
       </div>
     </div>
   );

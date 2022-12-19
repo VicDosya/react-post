@@ -15,7 +15,7 @@ function CommentList({ comments, postId, onDelete }) {
           onDelete={onDelete}
           key={key}
         ></Comment>
-      ))}
+      )).reverse()}
     </div>
   );
 }
