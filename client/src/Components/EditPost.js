@@ -45,7 +45,7 @@ function EditPost() {
   const loadEverything = async () => {
     setBtnDisabled(true);
     const _post = await loadPost();
-    if (!profile || !_post) {
+    if (!_post) {
       navigate("/");
     }
     if (profile._id !== _post.userId) {

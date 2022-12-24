@@ -5,9 +5,10 @@ import PostVote from "../Schemas/PostVote";
 const app = express();
 
 /**
- * This API sends all posts from DB to the homepage.
+ * This API sends to the user all the posts data from the database.
  * @route GET /
  * @returns {object} 200 - Returns an object that contains all posts
+ * @returns {object} 500 - Returns an object that contains an error that states something went wrong.
  */
 app.get("/", async (req, res) => {
   try {
@@ -20,7 +21,7 @@ app.get("/", async (req, res) => {
 });
 
 /**
- * This API sends a post that has a title and a description
+ * This API takes user's submitted post and saves it in the database.
  * @route POST /api/posts/
  * @param {string} title.body.optional - The title of the post
  * @param {string} body.body.optional - The body of the post
@@ -39,9 +40,12 @@ app.post("/", async (req, res) => {
 });
 
 /**
- * This API sends back a specific, individual post.
+ * This API finds a specific post using its id in the database and returns its data to the user.
  * @route GET /api/posts/:postId
  * @returns {object} 200 - Returns an object that contains the specific post.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found in the database
+ * @returns {object} 500 - Returns an object that contains an error that states invalid id.
+ *
  */
 app.get("/:postId", async (req, res) => {
   try {
@@ -56,10 +60,12 @@ app.get("/:postId", async (req, res) => {
 });
 
 /**
- * This API submits a comment to a specific post.
+ * This API takes user's submitted comment, saves it in the database and decrements post's comment amount number by one.
  * @route POST /api/posts/:postId/comments
  * @param {string} body.body.optional - The body of the comment
  * @returns {object} 200 - Returns an object that contains a statusMsg
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ *
  */
 app.post("/:postId/comments", async (req, res) => {
   const post = await Post.findById(req.params.postId);
@@ -81,9 +87,10 @@ app.post("/:postId/comments", async (req, res) => {
 });
 
 /**
- * This API sends all comments of a specific post
+ * This API takes all the comments that are stored in a specific post and sends the comments back to the user.
  * @route GET /api/posts/:postId/comments
  * @returns {object} 200 - Returns an object that contains all comments
+ * @returns {object} 500 - Returns an object that contains an error that states invalid id.
  */
 app.get("/:postId/comments", async (req, res) => {
   try {
@@ -97,9 +104,10 @@ app.get("/:postId/comments", async (req, res) => {
 });
 
 /**
- * This API sends the amount of comments in a specific post
+ * This API checks the amount of comments that are stored in a specific post and sends that amount to the user.
  * @route GET /api/posts/:postId/comments/all
  * @returns {number} 200 - Returns a number\amount of comments.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
  */
 app.get("/:postId/comments/all", async (req, res) => {
   const post = await Post.find({
@@ -113,9 +121,12 @@ app.get("/:postId/comments/all", async (req, res) => {
 });
 
 /**
- * This API gives permission to edit a comment
+ * This API gives permission to the user to edit a specific comment in a post only if he is authenticated
+ * and is the owner of the comment.
  * @route GET /api/posts/:postId/comments/:commentId
  * @returns {object} 200 - Returns an object that gives auth: true.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error if the comment is not found.
  */
 app.get("/:postId/comments/:commentId", async (req, res) => {
   const post = await Post.find({
@@ -138,9 +149,12 @@ app.get("/:postId/comments/:commentId", async (req, res) => {
 });
 
 /**
- * This API sends the original comment body before editing.
+ * This API takes the before edited, original comment text value and sends it back to the user when he
+ * requests to edit the comment.
  * @route GET /api/posts/:postId/comments/:commentId/edit
  * @returns {string} 200 - Returns a string containing the original before edit comment.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error if the user is not the owner of the comment.
  */
 app.get("/:postId/comments/:commentId/edit", async (req, res) => {
   const post = await Post.find({
@@ -161,10 +175,13 @@ app.get("/:postId/comments/:commentId/edit", async (req, res) => {
 });
 
 /**
- * This API sends an edited comment to the specific post.
+ * This API takes the edited comment that the user have made and updates its text value in the comment database.
  * @route PUT /api/posts/:postId/comments/:commentId
  * @param {string} body.body.optional - The body of the comment
  * @returns {object} 200 - Returns an object that contains a statusMsg
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error if the comment is not found.
+ * @returns {object} 500 - Returns an object that contains an error that something went wrong.
  */
 app.put("/:postId/comments/:commentId", async (req, res) => {
   const post = await Post.find({
@@ -192,9 +209,14 @@ app.put("/:postId/comments/:commentId", async (req, res) => {
 });
 
 /**
- * This API sends a request to delete a specific comment from a specific post.
+ * This API deletes user's specific comment from the database after authenticating that he is the
+ * owner of the comment.
  * @route DELETE /api/posts/:postId/comments/:commentId
  * @returns {object} 200 - Returns an object that contains a statusMsg
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error if the comment is not found.
+ * @returns {object} 500 - Returns an object that contains an error if the user is not the owner of the comment.
+ * @returns {object} 500 - Returns an object that contains an error deleting the post.
  */
 app.delete("/:postId/comments/:commentId", async (req, res) => {
   const post = await Post.findOne({
@@ -220,6 +242,8 @@ app.delete("/:postId/comments/:commentId", async (req, res) => {
       post: req.params.postId,
       userId: req.session.user._id,
     });
+    post.commentsCount--;
+    await post.save();
     res.send({ statusMsg: "Comment has been deleted." });
   } catch (err) {
     console.log(err);
@@ -228,9 +252,12 @@ app.delete("/:postId/comments/:commentId", async (req, res) => {
 });
 
 /**
- * This API sends the original title and description upon editing the post.
+ * This API takes the current post text values from the database and sends them back
+ * to the user when he requests to edit the post.
  * @route GET /api/posts/:postId
  * @returns {object} 200 - Returns an object that contains post data.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error that states invalid post.
  */
 app.get("/:postId", async (req, res) => {
   try {
@@ -247,11 +274,13 @@ app.get("/:postId", async (req, res) => {
 });
 
 /**
- * This API sends the edited title and the description and updates the specific post.
+ * This API takes the user's edited text values and updates the post values in the database.
  * @route PUT /api/posts/:postId
  * @param {string} title.body.optional - The title of the post
  * @param {string} body.body.optional - The body of the post
  * @returns {object} 200 - Returns an object that contains a statusMsg
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error stating that something went wrong.
  */
 app.put("/:postId", async (req, res) => {
   try {
@@ -274,9 +303,12 @@ app.put("/:postId", async (req, res) => {
 });
 
 /**
- * This API sends a request to delete a specific post.
+ * This API deletes a post from the database.
  * @route DELETE /api/posts/:postId
  * @returns {object} 200 - Returns an object that contains a statusMsg
+ * @returns {object} 500 - Returns an object that contains an error if the post does not exit.
+ * @returns {object} 500 - Returns an object that contains an error if the user is not the owner of the post.
+ * @returns {object} 500 - Returns an object that contains an error stating that there is an error deleting the post.
  */
 app.delete("/:postId", async (req, res) => {
   const post = await Post.findOne({
@@ -302,9 +334,11 @@ app.delete("/:postId", async (req, res) => {
 });
 
 /**
- * This API sends back the amount of votes up and down on a specific post
+ * This API takes the amount of votes up and votes down from the database and returns them to the user.
  * @route GET /api/posts/:postId/votes
  * @returns {number} 200 - Returns a number of up and down votes.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
+ * @returns {object} 500 - Returns an object that contains an error stating that there is an error in the voting system.
  */
 app.get("/:postId/votes", async (req, res) => {
   try {
@@ -333,9 +367,11 @@ app.get("/:postId/votes", async (req, res) => {
 });
 
 /**
- * This API sends a request to up vote or down vote a specific post.
+ * This API takes user's up, down or updated vote and saves it to the database.
  * @route POST /api/posts/:postId/votes
  * @returns {object} 200 - Returns an object that contains a statusMsg
+ * @returns {object} 500 - Returns an object that contains an error if the vote is not valid.
+ * @returns {object} 500 - Returns an object that contains an error if the post is not found.
  */
 app.post("/:postId/votes", async (req, res) => {
   //Validate if the vote is 1 or -1 and nothing else

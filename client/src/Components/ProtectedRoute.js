@@ -1,5 +1,5 @@
-import React, { useEffect, useContext, useState } from "react";
-import { useNavigate, Route } from "react-router-dom";
+import { useEffect, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProfileContext } from "./ProfileContext";
 
 function ProtectedRoute({ component: Component, ...rest }) {
