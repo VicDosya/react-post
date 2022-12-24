@@ -1,11 +1,14 @@
-import { React, useState, useEffect } from "react";
+//Import packages
+import { React, useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+//Import Components
+import { ProfileContext } from "./ProfileContext";
 import styles from "./EditPost.module.css";
 
 function EditPost() {
   //useState Variables:
-  const [profile, setProfile] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [statusOfPost, setStatusOfPost] = useState("");
@@ -18,21 +21,13 @@ function EditPost() {
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
 
+  //useContext from App.js
+  const {profile} = useContext(ProfileContext);
+
   //useEffect
   useEffect(() => {
     loadEverything();
   }, []);
-
-  //Load Profile function
-  const loadProfile = async () => {
-    const res = await axios.get("/api/auth/profile");
-    if (res.data.error) {
-      navigate("/auth/login");
-    } else {
-      setProfile(res.data);
-      return res.data;
-    }
-  };
 
   //loadPost functionality
   const loadPost = async () => {
@@ -49,12 +44,11 @@ function EditPost() {
   //Load Everything function
   const loadEverything = async () => {
     setBtnDisabled(true);
-    const _profile = await loadProfile();
     const _post = await loadPost();
-    if (!_profile || !_post) {
+    if (!profile || !_post) {
       navigate("/");
     }
-    if (_profile._id !== _post.userId) {
+    if (profile._id !== _post.userId) {
       navigate(`/post/${postId}`);
     }
     setBtnDisabled(false);

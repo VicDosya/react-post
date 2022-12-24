@@ -1,29 +1,33 @@
-import { useEffect, useState } from "react";
+//Import packages
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+//Import components
+import { ProfileContext } from "./ProfileContext";
 import PostForm from "./PostForm";
 import PostList from "./PostList";
 
-function HomePage({ posts, onPostSubmitted }) {
+function HomePage() {
   //useState Variables
-  const [profile, setProfile] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   //useNavigate
   let navigate = useNavigate();
 
+  //useContext from App.js
+  const { profile } = useContext(ProfileContext);
+
   //useEffect
   useEffect(() => {
-    loadProfile();
+    loadAllPosts();
   }, []);
 
-  //Load Profile function
-  const loadProfile = async () => {
-    const res = await axios.get("/api/auth/profile");
-    if (res.data.error) {
-      navigate("/auth/login");
-    } else {
-      setProfile(res.data);
-    }
+  //Load all the posts function.
+  const loadAllPosts = async () => {
+    const res = await axios.get("/api/posts");
+    setPosts(res.data);
+
   };
 
   //Logout function
@@ -40,7 +44,7 @@ function HomePage({ posts, onPostSubmitted }) {
         <button onClick={handleLogout}>Logout</button>
       </div>
       {/* Rest of components */}
-      <PostForm onPostSubmitted={onPostSubmitted} />
+      <PostForm onPostSubmitted={loadAllPosts} />
       <PostList posts={posts} />
     </div>
   );

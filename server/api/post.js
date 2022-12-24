@@ -4,7 +4,11 @@ import Comment from "../Schemas/Comment";
 import PostVote from "../Schemas/PostVote";
 const app = express();
 
-//Send back all the posts
+/**
+ * This API sends all posts from DB to the homepage.
+ * @route GET /
+ * @returns {object} 200 - Returns an object that contains all posts
+ */
 app.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
@@ -15,11 +19,14 @@ app.get("/", async (req, res) => {
   }
 });
 
-//Submitting a post
+/**
+ * This API sends a post that has a title and a description
+ * @route POST /api/posts/
+ * @param {string} title.body.optional - The title of the post
+ * @param {string} body.body.optional - The body of the post
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
 app.post("/", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   console.log(req.session.user);
   const post = new Post({
     userId: req.session.user._id,
@@ -31,11 +38,12 @@ app.post("/", async (req, res) => {
   res.send({ statusMsg: "Submitted!" });
 });
 
-//Send back individual post
+/**
+ * This API sends back a specific, individual post.
+ * @route GET /api/posts/:postId
+ * @returns {object} 200 - Returns an object that contains the specific post.
+ */
 app.get("/:postId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   try {
     const post = await Post.findById(req.params.postId);
     if (!post) {
@@ -47,11 +55,13 @@ app.get("/:postId", async (req, res) => {
   }
 });
 
-//Submitting a comment to individual posts
-app.post("/:postId/comment", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
+/**
+ * This API submits a comment to a specific post.
+ * @route POST /api/posts/:postId/comments
+ * @param {string} body.body.optional - The body of the comment
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
+app.post("/:postId/comments", async (req, res) => {
   const post = await Post.findById(req.params.postId);
   if (!post) {
     return res.send({ error: "Invalid post" });
@@ -70,11 +80,12 @@ app.post("/:postId/comment", async (req, res) => {
   res.send({ statusMsg: "Comment submitted!" });
 });
 
-//Get the comments of the individual post
+/**
+ * This API sends all comments of a specific post
+ * @route GET /api/posts/:postId/comments
+ * @returns {object} 200 - Returns an object that contains all comments
+ */
 app.get("/:postId/comments", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   try {
     const comments = await Comment.find({
       post: req.params.postId,
@@ -85,11 +96,12 @@ app.get("/:postId/comments", async (req, res) => {
   }
 });
 
-//Get all amount of comments of the individual post
+/**
+ * This API sends the amount of comments in a specific post
+ * @route GET /api/posts/:postId/comments/all
+ * @returns {number} 200 - Returns a number\amount of comments.
+ */
 app.get("/:postId/comments/all", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   const post = await Post.find({
     _id: req.params.postId,
   });
@@ -100,12 +112,12 @@ app.get("/:postId/comments/all", async (req, res) => {
   }
 });
 
-//Edit a comment by clicking edit
+/**
+ * This API gives permission to edit a comment
+ * @route GET /api/posts/:postId/comments/:commentId
+ * @returns {object} 200 - Returns an object that gives auth: true.
+ */
 app.get("/:postId/comments/:commentId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
-
   const post = await Post.find({
     _id: req.params.postId,
     userId: req.session.user._id,
@@ -125,11 +137,12 @@ app.get("/:postId/comments/:commentId", async (req, res) => {
   res.send({ auth: true });
 });
 
-//Send back comment data upon editing
+/**
+ * This API sends the original comment body before editing.
+ * @route GET /api/posts/:postId/comments/:commentId/edit
+ * @returns {string} 200 - Returns a string containing the original before edit comment.
+ */
 app.get("/:postId/comments/:commentId/edit", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   const post = await Post.find({
     _id: req.params.postId,
   });
@@ -147,11 +160,13 @@ app.get("/:postId/comments/:commentId/edit", async (req, res) => {
   res.send(comment.body);
 });
 
-//Submit edited comment
+/**
+ * This API sends an edited comment to the specific post.
+ * @route PUT /api/posts/:postId/comments/:commentId
+ * @param {string} body.body.optional - The body of the comment
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
 app.put("/:postId/comments/:commentId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   const post = await Post.find({
     _id: req.params.postId,
   });
@@ -176,11 +191,12 @@ app.put("/:postId/comments/:commentId", async (req, res) => {
   }
 });
 
-//Delete a comment
+/**
+ * This API sends a request to delete a specific comment from a specific post.
+ * @route DELETE /api/posts/:postId/comments/:commentId
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
 app.delete("/:postId/comments/:commentId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   const post = await Post.findOne({
     _id: req.params.postId,
   });
@@ -211,11 +227,12 @@ app.delete("/:postId/comments/:commentId", async (req, res) => {
   }
 });
 
-//Send post data upon editing
+/**
+ * This API sends the original title and description upon editing the post.
+ * @route GET /api/posts/:postId
+ * @returns {object} 200 - Returns an object that contains post data.
+ */
 app.get("/:postId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   try {
     const post = await Post.find({
       _id: req.params.postId,
@@ -229,11 +246,14 @@ app.get("/:postId", async (req, res) => {
   }
 });
 
-//Edit post data
+/**
+ * This API sends the edited title and the description and updates the specific post.
+ * @route PUT /api/posts/:postId
+ * @param {string} title.body.optional - The title of the post
+ * @param {string} body.body.optional - The body of the post
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
 app.put("/:postId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   try {
     const post = await Post.findOne({
       _id: req.params.postId,
@@ -253,11 +273,12 @@ app.put("/:postId", async (req, res) => {
   }
 });
 
-//Delete a post
+/**
+ * This API sends a request to delete a specific post.
+ * @route DELETE /api/posts/:postId
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
 app.delete("/:postId", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   const post = await Post.findOne({
     _id: req.params.postId,
     userId: req.session.user._id,
@@ -280,11 +301,12 @@ app.delete("/:postId", async (req, res) => {
   }
 });
 
-//Send all votes to the client
+/**
+ * This API sends back the amount of votes up and down on a specific post
+ * @route GET /api/posts/:postId/votes
+ * @returns {number} 200 - Returns a number of up and down votes.
+ */
 app.get("/:postId/votes", async (req, res) => {
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
-  }
   try {
     const post = await Post.findOne({
       _id: req.params.postId,
@@ -310,12 +332,12 @@ app.get("/:postId/votes", async (req, res) => {
   }
 });
 
-//Handle votes from the client
+/**
+ * This API sends a request to up vote or down vote a specific post.
+ * @route POST /api/posts/:postId/votes
+ * @returns {object} 200 - Returns an object that contains a statusMsg
+ */
 app.post("/:postId/votes", async (req, res) => {
-  //Validate if the client is authorized
-  if (!req.session.user) {
-    return res.send({ error: "You are not logged in to vote." });
-  }
   //Validate if the vote is 1 or -1 and nothing else
   if (req.body.vote !== 1 && req.body.vote !== -1) {
     res.send({ error: "Vote is not valid." });
