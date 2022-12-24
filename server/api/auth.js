@@ -5,7 +5,15 @@ const app = express();
 
 //Authentication
 
-//Send user data upon registering
+/**
+ * This API sends user's data to the server upon registration
+ * @route POST /api/auth/register
+ * @param {string} fname.body.required - First name
+ * @param {string} lname.body.required - Last name
+ * @param {string} email.body.required - Email
+ * @param {string} password.body.required - Password
+ * @returns {object} 200 - Returns an object that contains a status and user session data
+ */
 app.post("/register", async (req, res) => {
   //Registeration Validation
 
@@ -58,7 +66,13 @@ app.post("/register", async (req, res) => {
   }
 });
 
-//Log in with user data
+/**
+ * This API request sends user data upon logging in.
+ * @route POST /api/auth/login
+ * @param {string} email.body.required - Email
+ * @param {string} password.body.required - Password
+ * @returns {object} 200 - Returns an object that contains a status and user session data
+ */
 app.post("/login", async (req, res) => {
   if (req.session.user) {
     return res.send(req.session.user);
@@ -72,7 +86,7 @@ app.post("/login", async (req, res) => {
   //Decrypt the password
   const decryptedPassword = await bcrypt.compare(
     req.body.password,
-    user.password,
+    user.password
   );
   if (!decryptedPassword) {
     return res.send({ status: "Incorrect password.", error: true });
@@ -81,7 +95,11 @@ app.post("/login", async (req, res) => {
   res.send({ user, status: "Logged in, Redirecting..." });
 });
 
-//Profile api to return to the user
+/**
+ * This API sends user's session data
+ * @route GET /api/auth/profile
+ * @returns {object} 200 - Returns an object that contains a status.
+ */
 app.get("/profile", async (req, res) => {
   if (req.session.user) {
     res.send(req.session.user);
@@ -90,7 +108,11 @@ app.get("/profile", async (req, res) => {
   }
 });
 
-//Profile api to logout
+/**
+ * This API request is changing user's session into null upon logging out.
+ * @route POST /api/auth/logout
+ * @returns {object} 200 - Returns an object that contains a status
+ */
 app.get("/logout", async (req, res) => {
   req.session.user = null; //Removing the user from the session
   res.send({ status: "Logged out..." });
