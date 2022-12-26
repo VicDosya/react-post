@@ -13,9 +13,9 @@ const app = express();
  * @param {string} lname.body.required - Last name
  * @param {string} email.body.required - Email
  * @param {string} password.body.required - Password
- * @returns {object} 200 - Returns an object that contains a status and user session data
- * @returns {object} 500 - Returns an object that contains an error states that the user already exists.
- * @returns {object} 500 - Returns an object that contains an error states that the inputs are not valid.
+ * @returns {object} 201 - Returns an object that contains a status and user session data
+ * @returns {object} 403 - Returns an object that contains an error states that the user already exists.
+ * @returns {object} 400 - Returns an object that contains an error states that the inputs are not valid.
  */
 app.post("/register", async (req, res) => {
   //Registeration Validation
@@ -58,13 +58,12 @@ app.post("/register", async (req, res) => {
       password: encryptedPassword,
     });
     await user.save();
-    res.send({ status: "Success" });
+    res.status(201).send({ message: "Success" });
   } else if (oldUser) {
-    return res.send({ status: "This user already exists", error: true });
+    return res.status(403).send({ message: "This user already exists" });
   } else {
-    res.send({
-      status: "One or more input fields are not valid.",
-      error: true,
+    res.status(400).send({
+      message: "One or more input fields are not valid.",
     });
   }
 });
@@ -75,19 +74,20 @@ app.post("/register", async (req, res) => {
  * @route POST /api/auth/login
  * @param {string} email.body.required - Email
  * @param {string} password.body.required - Password
- * @returns {object} 200 - Returns an object that contains a status and user session data
- * @returns {object} 500 - Returns an object that contains an error states that the user does not exist.
- * @returns {object} 500 - Returns an object that contains an error states that the password is incorrect.
+ * @returns {string} 200 - Returns back user session if the user already logged in.
+ * @returns {object} 202 - Returns an object that contains a status and user session data
+ * @returns {object} 404 - Returns an object that contains an error states that the user does not exist.
+ * @returns {object} 401 - Returns an object that contains an error states that the password is incorrect.
  */
 app.post("/login", async (req, res) => {
   if (req.session.user) {
-    return res.send(req.session.user);
+    return res.status(200).send(req.session.user);
   }
   const user = await UserDetails.findOne({
     email: req.body.email,
   });
   if (!user) {
-    return res.send({ status: "User does not exist.", error: true });
+    return res.status(404).send({ message: "User does not exist." });
   }
   //Decrypt the password
   const decryptedPassword = await bcrypt.compare(
@@ -95,10 +95,10 @@ app.post("/login", async (req, res) => {
     user.password
   );
   if (!decryptedPassword) {
-    return res.send({ status: "Incorrect password.", error: true });
+    return res.status(401).send({ message: "Incorrect password." });
   }
   req.session.user = user;
-  res.send({ user, status: "Logged in, Redirecting..." });
+  res.status(202).send({ user, message: "Logged in, Redirecting..." });
 });
 
 /**
@@ -106,13 +106,13 @@ app.post("/login", async (req, res) => {
  * other APIs.
  * @route GET /api/auth/profile
  * @returns {object} 200 - Returns an object that contains a status.
- * @returns {object} 500 - Returns an object that contains an error stating that the user is not logged in.
+ * @returns {object} 401 - Returns an object that contains an error stating that the user is not logged in.
  */
 app.get("/profile", async (req, res) => {
   if (req.session.user) {
-    res.send(req.session.user);
+    res.status(200).send(req.session.user);
   } else {
-    res.send({ status: "User not logged in.", error: true });
+    res.status(401).send({ message: "User not logged in." });
   }
 });
 
@@ -123,7 +123,7 @@ app.get("/profile", async (req, res) => {
  */
 app.get("/logout", async (req, res) => {
   req.session.user = null; //Removing the user from the session
-  res.send({ status: "Logged out..." });
+  res.status(200).send({ status: "Logged out..." });
 });
 
 export default app;

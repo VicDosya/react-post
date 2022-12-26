@@ -22,7 +22,7 @@ function EditPost() {
   const { postId } = useParams(); //To take the path :postId parameter from App.js
 
   //useContext from App.js
-  const {profile} = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
 
   //useEffect
   useEffect(() => {
@@ -31,13 +31,13 @@ function EditPost() {
 
   //loadPost functionality
   const loadPost = async () => {
-    const res = await axios.get(`/api/posts/${postId}`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}`);
       setTitle(res.data.title);
       setDescription(res.data.body);
       return res.data;
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
@@ -57,27 +57,27 @@ function EditPost() {
   //Submit edited post
   const submitHandler = async () => {
     setBtnDisabled(true);
-    const res = await axios.put(`/api/posts/${postId}`, {
-      title: title,
-      description: description,
-    });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
-      setStatusOfPost(res.data.statusMsg);
-      setTimeout(navigate(`/post/${postId}`), 2000);
+    try {
+      const res = await axios.put(`/api/posts/${postId}`, {
+        title: title,
+        description: description,
+      });
+      setError("");
+      navigate(`/post/${postId}`);
+    } catch (err) {
+      setError(err.response.data.error);
     }
     setBtnDisabled(false);
   };
 
   //Delete button functionality
   const handleDelete = async () => {
-    const res = await axios.delete(`/api/posts/${postId}`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.delete(`/api/posts/${postId}`);
       setStatusOfPost(res.data.statusMsg);
       navigate("/");
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 

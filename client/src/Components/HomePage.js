@@ -25,9 +25,12 @@ function HomePage() {
 
   //Load all the posts function.
   const loadAllPosts = async () => {
-    const res = await axios.get("/api/posts");
-    setPosts(res.data);
-
+    try {
+      const res = await axios.get("/api/posts");
+      setPosts(res.data);
+    } catch (err) {
+      console.log(err.response.data.error);
+    }
   };
 
   //Logout function

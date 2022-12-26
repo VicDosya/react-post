@@ -48,39 +48,39 @@ function PostPage({ posts }) {
 
   //Load the post data function
   const loadPost = async () => {
-    const res = await axios.get(`/api/posts/${postId}`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}`);
       setPost(res.data);
       setError("");
+    } catch (err) {
+      setError(err.response.data.error);
     }
     setLoading(false);
   };
 
   //Load all the comments of this post
   const loadComments = async () => {
-    const res = await axios.get(`/api/posts/${postId}/comments`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}/comments`);
       setComments(res.data.comments);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
   //Delete a comment - commentId parameter is from Comment.js fired by button click.
   const deleteComment = async (commentId) => {
-    const res = await axios.delete(
-      `/api/posts/${postId}/comments/${commentId}`
-    );
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.delete(
+        `/api/posts/${postId}/comments/${commentId}`
+      );
       const filteredComments = comments.filter(
         (comment) => comment.commentId === commentId
       );
       setComments(filteredComments);
       loadComments();
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
@@ -88,15 +88,15 @@ function PostPage({ posts }) {
   const getAllVotes = async () => {
     setVoteUpDisabled(true);
     setVoteDownDisabled(true);
-    const res = await axios.get(`/api/posts/${postId}/votes`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}/votes`);
       setError("");
       setVoteUp(res.data.votesUpCount);
       setVoteDown(res.data.votesDownCount);
       setVoteUpDisabled(false);
       setVoteDownDisabled(false);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
@@ -104,16 +104,16 @@ function PostPage({ posts }) {
   const handleVote = async (num) => {
     setVoteUpDisabled(true);
     setVoteDownDisabled(true);
-    const res = await axios.post(`/api/posts/${postId}/votes`, {
-      vote: num,
-    });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.post(`/api/posts/${postId}/votes`, {
+        vote: num,
+      });
       setError("");
       getAllVotes();
       setVoteUpDisabled(false);
       setVoteDownDisabled(false);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 

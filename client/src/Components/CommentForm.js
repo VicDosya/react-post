@@ -10,14 +10,16 @@ function CommentForm({ postId, loadComments }) {
 
   //Submit a comment
   const submitComment = async () => {
-    setbtnDisabled(true);
-    const res = await axios.post(`/api/posts/${postId}/comments`, { comment });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      setbtnDisabled(true);
+      const res = await axios.post(`/api/posts/${postId}/comments`, {
+        comment,
+      });
       setComment("");
       loadComments();
       setError("");
+    } catch (err) {
+      setError(err.response.data.error);
     }
     setbtnDisabled(false);
   };

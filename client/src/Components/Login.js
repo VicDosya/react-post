@@ -14,16 +14,21 @@ function Login() {
 
   //Submit log in data to the server
   const handleSubmit = async () => {
-    const res = await axios.post("/api/auth/login", {
-      email: email,
-      password: password,
-    });
-    setStatus(res.data.status);
-    if (!res.data.error) {
+    if (email === "" || password === "") {
+      return setStatus("Please fill in all the inputs.");
+    }
+    try {
+      const res = await axios.post("/api/auth/login", {
+        email: email,
+        password: password,
+      });
+      setStatus(res.data.message);
       setbtnDisabled(true);
       setEmail("");
       setPassword("");
       navigate("/");
+    } catch (err) {
+      setStatus(err.response.data.message);
     }
   };
 

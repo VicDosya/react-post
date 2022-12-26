@@ -19,7 +19,7 @@ function EditComment() {
   const { commentId } = useParams();
 
   //useContext from App.js
-  const {profile} = useContext(ProfileContext);
+  const { profile } = useContext(ProfileContext);
 
   //useNavigate
   let navigate = useNavigate();
@@ -31,37 +31,40 @@ function EditComment() {
 
   //Get comment data in the input
   const getComment = async () => {
-    const res = await axios.get(
-      `/api/posts/${postId}/comments/${commentId}/edit`
-    );
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(
+        `/api/posts/${postId}/comments/${commentId}/edit`
+      );
       setComment(res.data);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
   //Submit edited comment
   const submitHandler = async () => {
-    const res = await axios.put(`/api/posts/${postId}/comments/${commentId}`, {
-      comment: comment,
-    });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.put(
+        `/api/posts/${postId}/comments/${commentId}`,
+        {
+          comment: comment,
+        }
+      );
       navigate(`/post/${postId}`);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
   //Delete a comment
   const handleDelete = async () => {
-    const res = await axios.delete(
-      `/api/posts/${postId}/comments/${commentId}`
-    );
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.delete(
+        `/api/posts/${postId}/comments/${commentId}`
+      );
       navigate(`/post/${postId}`);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 

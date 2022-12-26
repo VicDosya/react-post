@@ -24,9 +24,13 @@ function App() {
 
   //Load Profile function
   const loadProfile = async () => {
-    const res = await axios.get("/api/auth/profile");
-    setProfile(res.data);
-    return res.data;
+    try {
+      const res = await axios.get("/api/auth/profile");
+      setProfile(res.data);
+      return res.data;
+    } catch (err) {
+      console.log(err.response.data.message);
+    }
   };
 
   return (

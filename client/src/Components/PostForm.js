@@ -13,18 +13,14 @@ function PostForm({ onPostSubmitted }) {
   //Submit button functionality.
   const submitHandler = async () => {
     if (title === "" || description === "") {
-      setStatusOfPost("Please fill all the inputs.");
-    } else {
+      return setStatusOfPost("Please fill all the inputs.");
+    }
+    try {
       setBtnDisabled(true);
-      const res = await axios
-        .post("/api/posts", {
-          title: title,
-          body: description,
-        })
-        .catch((err) => {
-          console.log(`Something went wrong: ${err}`);
-          setBtnDisabled(false);
-        });
+      const res = await axios.post("/api/posts", {
+        title: title,
+        body: description,
+      });
       onPostSubmitted();
       setStatusOfPost(res.data.statusMsg);
       setTimeout(() => {
@@ -33,6 +29,8 @@ function PostForm({ onPostSubmitted }) {
       setTitle("");
       setDescription("");
       setBtnDisabled(false);
+    } catch (err) {
+      setStatusOfPost(err.response.data.statusMsg);
     }
   };
 

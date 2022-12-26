@@ -29,7 +29,7 @@ app.use(
 //My own middleware - execute the middleware on specific api route.
 app.use("/api/posts", (req, res, next) => {
   if (!req.session.user) {
-    return res.send({ error: "You are not logged in." });
+    return res.status(401).send({ error: "You are not logged in." });
   }
   next();
 });
