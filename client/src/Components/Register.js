@@ -19,19 +19,29 @@ function Register() {
 
   //Submit user data to the server
   const handleSubmit = async () => {
-    const res = await axios.post("/api/auth/register", {
-      fname: firstName,
-      lname: lastName,
-      email: email,
-      password: password,
-    });
-    setStatus(res.data.status);
-    if (!res.data.error) {
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      email === "" ||
+      password === ""
+    ) {
+      return setStatus("Please fill in all the input fields.");
+    }
+    try {
+      const res = await axios.post("/api/auth/register", {
+        fname: firstName,
+        lname: lastName,
+        email: email,
+        password: password,
+      });
+      setStatus(res.data.message);
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
       setTimeout(goLogin, 1500);
+    } catch (err) {
+      setStatus(err.response.data.message);
     }
   };
 

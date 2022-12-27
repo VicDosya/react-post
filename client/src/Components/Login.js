@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
@@ -10,43 +10,31 @@ function Login() {
   const [status, setStatus] = useState("");
   const [btnDisabled, setbtnDisabled] = useState(false);
 
-  //useEffect
-  useEffect(() => {
-    loadProfile();
-  }, []);
-
-  //Load Profile function
-  const loadProfile = async () => {
-    const res = await axios.get("/api/auth/profile");
-    if (res.data.error) {
-      navigate("/auth/login");
-    } else {
-      navigate("/");
-    }
-  };
+  let navigate = useNavigate();
 
   //Submit log in data to the server
   const handleSubmit = async () => {
-    const res = await axios.post("/api/auth/login", {
-      email: email,
-      password: password,
-    });
-    setStatus(res.data.status);
-    if (!res.data.error) {
+    if (email === "" || password === "") {
+      return setStatus("Please fill in all the inputs.");
+    }
+    try {
+      const res = await axios.post("/api/auth/login", {
+        email: email,
+        password: password,
+      });
+      setStatus(res.data.message);
       setbtnDisabled(true);
       setEmail("");
       setPassword("");
-      setTimeout(goHomePage, 2000);
+      navigate("/");
+    } catch (err) {
+      setStatus(err.response.data.message);
     }
   };
 
   //Route to different pages
-  let navigate = useNavigate();
   const goRegister = () => {
     navigate("/auth/register");
-  };
-  const goHomePage = () => {
-    navigate("/");
   };
 
   return (
@@ -91,7 +79,11 @@ function Login() {
         </div>
         {/* Button */}
         <div className={styles.btnCtn}>
-          <button onClick={handleSubmit} className={styles.submitBtn} disabled={btnDisabled}>
+          <button
+            onClick={handleSubmit}
+            className={styles.submitBtn}
+            disabled={btnDisabled}
+          >
             Submit
           </button>
         </div>

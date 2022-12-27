@@ -26,6 +26,13 @@ app.use(
     secret: process.env.SESSION_SECRET_KEY,
   })
 );
+//My own middleware - execute the middleware on specific api route.
+app.use("/api/posts", (req, res, next) => {
+  if (!req.session.user) {
+    return res.status(401).send({ error: "You are not logged in." });
+  }
+  next();
+});
 
 //Routes
 app.use("/api/auth", apiAuthRoutes);

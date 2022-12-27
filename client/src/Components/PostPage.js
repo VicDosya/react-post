@@ -1,10 +1,14 @@
-import { React, useState, useEffect } from "react";
+//Import packages
+import { React, useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import TimeAgo from "react-timeago";
+
+//Import Components
+import { ProfileContext } from "./ProfileContext";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
-import axios from "axios";
 import styles from "./PostPage.module.css";
-import TimeAgo from "react-timeago";
 
 function PostPage({ posts }) {
   //useState Variables
@@ -12,7 +16,6 @@ function PostPage({ posts }) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [profile, setProfile] = useState(null);
   const [btnDisabled, setbtnDisabled] = useState(false);
   const [voteUpDisabled, setVoteUpDisabled] = useState(false);
   const [voteDownDisabled, setVoteDownDisabled] = useState(false);
@@ -22,23 +25,15 @@ function PostPage({ posts }) {
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
 
+  //useContext from App.js
+  const { profile } = useContext(ProfileContext);
+
   //useEffect to load the post data
   useEffect(() => {
-    loadProfile();
     loadPost();
     loadComments();
     getAllVotes();
   }, []);
-
-  //Load Profile function
-  const loadProfile = async () => {
-    const res = await axios.get("/api/auth/profile");
-    if (res.data.error) {
-      navigate("/auth/login");
-    } else {
-      setProfile(res.data);
-    }
-  };
 
   //Logout function
   const handleLogout = async () => {
@@ -53,38 +48,39 @@ function PostPage({ posts }) {
 
   //Load the post data function
   const loadPost = async () => {
-    const res = await axios.get(`/api/posts/${postId}`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}`);
       setPost(res.data);
       setError("");
+    } catch (err) {
+      setError(err.response.data.error);
     }
     setLoading(false);
   };
 
   //Load all the comments of this post
   const loadComments = async () => {
-    const res = await axios.get(`/api/posts/${postId}/comments`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}/comments`);
       setComments(res.data.comments);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
   //Delete a comment - commentId parameter is from Comment.js fired by button click.
   const deleteComment = async (commentId) => {
-    const res = await axios.delete(
-      `/api/posts/${postId}/comments/${commentId}`
-    );
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.delete(
+        `/api/posts/${postId}/comments/${commentId}`
+      );
       const filteredComments = comments.filter(
         (comment) => comment.commentId === commentId
       );
       setComments(filteredComments);
+      loadComments();
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
@@ -92,15 +88,15 @@ function PostPage({ posts }) {
   const getAllVotes = async () => {
     setVoteUpDisabled(true);
     setVoteDownDisabled(true);
-    const res = await axios.get(`/api/posts/${postId}/votes`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}/votes`);
       setError("");
       setVoteUp(res.data.votesUpCount);
       setVoteDown(res.data.votesDownCount);
       setVoteUpDisabled(false);
       setVoteDownDisabled(false);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
@@ -108,16 +104,16 @@ function PostPage({ posts }) {
   const handleVote = async (num) => {
     setVoteUpDisabled(true);
     setVoteDownDisabled(true);
-    const res = await axios.post(`/api/posts/${postId}/votes`, {
-      vote: num,
-    });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.post(`/api/posts/${postId}/votes`, {
+        vote: num,
+      });
       setError("");
       getAllVotes();
       setVoteUpDisabled(false);
       setVoteDownDisabled(false);
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 

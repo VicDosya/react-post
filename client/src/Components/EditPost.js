@@ -1,11 +1,14 @@
-import { React, useState, useEffect } from "react";
+//Import packages
+import { React, useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+
+//Import Components
+import { ProfileContext } from "./ProfileContext";
 import styles from "./EditPost.module.css";
 
 function EditPost() {
   //useState Variables:
-  const [profile, setProfile] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [statusOfPost, setStatusOfPost] = useState("");
@@ -18,43 +21,34 @@ function EditPost() {
   //useParams Variables
   const { postId } = useParams(); //To take the path :postId parameter from App.js
 
+  //useContext from App.js
+  const { profile } = useContext(ProfileContext);
+
   //useEffect
   useEffect(() => {
     loadEverything();
   }, []);
 
-  //Load Profile function
-  const loadProfile = async () => {
-    const res = await axios.get("/api/auth/profile");
-    if (res.data.error) {
-      navigate("/auth/login");
-    } else {
-      setProfile(res.data);
-      return res.data;
-    }
-  };
-
   //loadPost functionality
   const loadPost = async () => {
-    const res = await axios.get(`/api/posts/${postId}`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.get(`/api/posts/${postId}`);
       setTitle(res.data.title);
       setDescription(res.data.body);
       return res.data;
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
   //Load Everything function
   const loadEverything = async () => {
     setBtnDisabled(true);
-    const _profile = await loadProfile();
     const _post = await loadPost();
-    if (!_profile || !_post) {
+    if (!_post) {
       navigate("/");
     }
-    if (_profile._id !== _post.userId) {
+    if (profile._id !== _post.userId) {
       navigate(`/post/${postId}`);
     }
     setBtnDisabled(false);
@@ -63,27 +57,27 @@ function EditPost() {
   //Submit edited post
   const submitHandler = async () => {
     setBtnDisabled(true);
-    const res = await axios.put(`/api/posts/${postId}`, {
-      title: title,
-      description: description,
-    });
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
-      setStatusOfPost(res.data.statusMsg);
-      setTimeout(navigate(`/post/${postId}`), 2000);
+    try {
+      const res = await axios.put(`/api/posts/${postId}`, {
+        title: title,
+        description: description,
+      });
+      setError("");
+      navigate(`/post/${postId}`);
+    } catch (err) {
+      setError(err.response.data.error);
     }
     setBtnDisabled(false);
   };
 
   //Delete button functionality
   const handleDelete = async () => {
-    const res = await axios.delete(`/api/posts/${postId}`);
-    if (res.data.error) {
-      setError(res.data.error);
-    } else {
+    try {
+      const res = await axios.delete(`/api/posts/${postId}`);
       setStatusOfPost(res.data.statusMsg);
       navigate("/");
+    } catch (err) {
+      setError(err.response.data.error);
     }
   };
 
