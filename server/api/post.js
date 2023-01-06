@@ -8,7 +8,7 @@ const app = express();
  * This API sends to the user all the posts data from the database.
  * @route GET /
  * @returns {object} 200 - Returns an object that contains all posts
- * @returns {object} 404 - Returns an object that contains an error that states something went wrong.
+ * @returns {object} 500 - Returns an object that contains an error that states something went wrong.
  */
 app.get("/", async (req, res) => {
   try {
@@ -16,7 +16,7 @@ app.get("/", async (req, res) => {
     res.status(200).send(posts);
   } catch (err) {
     res
-      .status(404)
+      .status(500)
       .send({ error: "Something went wrong with the posts system" });
     console.log(err);
   }
@@ -32,11 +32,11 @@ app.get("/", async (req, res) => {
  * @returns {object} 500 - Returns an object that contains an error if something went wrong.
  */
 app.post("/", async (req, res) => {
-  if (req.body.title === "" || req.body.description === "") {
+  if (!req.body.title || !req.body.body) {
     return res.status(400).send({ statusMsg: "Please fill all the inputs." });
   }
   try {
-    console.log(req.session.user);
+    console.log('========', Post);
     const post = new Post({
       userId: req.session.user._id,
       title: req.body.title,
