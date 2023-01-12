@@ -36,7 +36,6 @@ app.post("/", async (req, res) => {
     return res.status(400).send({ statusMsg: "Please fill all the inputs." });
   }
   try {
-    console.log('========', Post);
     const post = new Post({
       userId: req.session.user._id,
       title: req.body.title,
@@ -60,8 +59,9 @@ app.post("/", async (req, res) => {
  */
 app.get("/:postId", async (req, res) => {
   try {
+    //STATIC METHOD IN TESTING, notice that there's no 'new Post'.
     const post = await Post.findById(req.params.postId);
-    if (!post) {
+    if (!post) { //if post is undefined or null.
       return res.status(404).send({ error: "Post not found." });
     }
     res.status(200).send(post);
@@ -120,15 +120,15 @@ app.get("/:postId/comments", async (req, res) => {
  * @returns {number} 200 - Returns a number\amount of comments.
  * @returns {object} 404 - Returns an object that contains an error if the post is not found.
  */
-app.get("/:postId/comments/all", async (req, res) => {
-  const post = await Post.find({
-    _id: req.params.postId,
-  });
-  if (!post) {
-    return res.status(404).send({ error: "Post not found." });
-  }
-  res.status(200).send(0);
-});
+// app.get("/:postId/comments/all", async (req, res) => {
+//   const post = await Post.find({
+//     _id: req.params.postId,
+//   });
+//   if (!post) {
+//     return res.status(404).send({ error: "Post not found." });
+//   }
+//   res.status(200).send('No comments.');
+// });
 
 /**
  * This API gives permission to the user to edit a specific comment in a post only if he is authenticated
@@ -275,9 +275,7 @@ app.delete("/:postId/comments/:commentId", async (req, res) => {
  */
 app.get("/:postId", async (req, res) => {
   try {
-    const post = await Post.find({
-      _id: req.params.postId,
-    });
+    const post = await Post.findById(req.params.postId);
     if (!post) {
       return res.status(404).send({ error: "Post not found." });
     }
@@ -395,7 +393,7 @@ app.get("/:postId/votes", async (req, res) => {
 app.post("/:postId/votes", async (req, res) => {
   //Validate if the vote is 1 or -1 and nothing else
   if (req.body.vote !== 1 && req.body.vote !== -1) {
-    res.status(403).send({ error: "Vote is not valid." });
+    return res.status(403).send({ error: "Vote is not valid." });
   }
   //Validate if post exists
   const post = await Post.findById(req.params.postId);
@@ -415,8 +413,8 @@ app.post("/:postId/votes", async (req, res) => {
   const vote = new PostVote({
     userId: req.session.user._id,
     post: req.params.postId,
+    vote: req.body.vote,
   });
-  vote.vote = req.body.vote;
   await vote.save();
   res.status(201).send({ statusMsg: "Voted!" });
 });
