@@ -279,36 +279,7 @@ describe("API route", () => {
       expect(Comment.find).toHaveBeenCalledWith({ post: "testId" });
     });
   });
-  // describe("test GET /api/posts/:postId/comments/all", () => {
-  //   it("should return error message and status 404 if post not found", async () => {
-  //     Post.find = jest.fn();
-  //     Post.find.mockResolvedValue(null);
-  //     let error = null;
-  //     try {
-  //       await axios.get("http://localhost:3000/api/posts/testId/comments/all");
-  //     } catch (err) {
-  //       error = err;
-  //     }
-  //     expect(error.response.data).toEqual({ error: "Post not found." });
-  //     expect(error.response.status).toBe(404);
-  //   });
 
-  //   it("should return status 200 and send an initial number 0 (post comment amount)", async () => {
-  //     Post.find = jest.fn();
-  //     const mockedPost = [
-  //       {
-  //         test: "test",
-  //       },
-  //     ];
-  //     Post.find.mockResolvedValue(mockedPost);
-
-  //     const response = await axios.get(
-  //       "http://localhost:3000/api/posts/testId/comments/all"
-  //     );
-  //     expect(response.data).toEqual(0);
-  //     expect(response.status).toBe(200);
-  //   });
-  // });
   describe("test GET /api/posts/:postId/comments/:commentId", () => {
     it("should return an error message and status 404 if post is not found", async () => {
       Post.find = jest.fn();
@@ -1045,13 +1016,13 @@ describe("API route", () => {
       expect(changedVote).toBe(-1);
       expect(response.data).toEqual({ statusMsg: "Vote has been changed." });
       expect(response.status).toBe(201);
-      expect(Post.findById).toHaveBeenCalledWith('testId');
+      expect(Post.findById).toHaveBeenCalledWith("testId");
       expect(PostVote.findOne).toHaveBeenCalled();
     });
     it("should return a message with status 201 when vote has been made.", async () => {
       Post.findById = jest.fn();
       const mockedPost = {
-        _id: 'testId123',
+        _id: "testId123",
       };
       Post.findById.mockResolvedValue(mockedPost);
       PostVote.findOne = jest.fn();
@@ -1060,22 +1031,25 @@ describe("API route", () => {
       const mockedSave = jest.fn();
 
       PostVote.mockReturnValue({
-        userId: 'userId',
-        post: 'testId123',
+        userId: "userId",
+        post: "testId123",
         vote: 0,
         save: mockedSave,
       });
-      const response = await axios.post("http://localhost:3000/api/posts/testId123/votes", {
-        vote: 1,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/posts/testId123/votes",
+        {
+          vote: 1,
+        }
+      );
       expect(PostVote).toHaveBeenCalledWith({
-        userId: 'userId',
-        post: 'testId123',
+        userId: "userId",
+        post: "testId123",
         vote: 1,
       });
       expect(response.data).toEqual({ statusMsg: "Voted!" });
       expect(response.status).toBe(201);
-      expect(Post.findById).toHaveBeenCalledWith('testId123');
+      expect(Post.findById).toHaveBeenCalledWith("testId123");
       expect(PostVote.findOne).toHaveBeenCalled();
     });
   });
