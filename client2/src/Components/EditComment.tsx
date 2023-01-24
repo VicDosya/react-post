@@ -1,5 +1,5 @@
 //Import packages
-import { React, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -36,7 +36,7 @@ function EditComment() {
         `/api/posts/${postId}/comments/${commentId}/edit`
       );
       setComment(res.data);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
@@ -51,7 +51,7 @@ function EditComment() {
         }
       );
       navigate(`/post/${postId}`);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
@@ -63,7 +63,7 @@ function EditComment() {
         `/api/posts/${postId}/comments/${commentId}`
       );
       navigate(`/post/${postId}`);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
@@ -110,7 +110,6 @@ function EditComment() {
           <textarea
             className={styles.createPostTextArea}
             placeholder="Edit your comment..."
-            type="text"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>

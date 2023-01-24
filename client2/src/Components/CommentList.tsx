@@ -1,7 +1,8 @@
 import React from "react";
 import Comment from "./Comment";
+import {CommentListType} from './ReactPost.types';
 
-function CommentList({ comments, postId, onDelete }) {
+function CommentList({ comments, postId, onDelete }: CommentListType) {
   return (
     <div>
       {comments

@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "./Auth.module.css";
@@ -40,7 +40,7 @@ function Register() {
       setEmail("");
       setPassword("");
       setTimeout(goLogin, 1500);
-    } catch (err) {
+    } catch (err: any) {
       setStatus(err.response.data.message);
     }
   };

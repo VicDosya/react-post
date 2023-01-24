@@ -3,7 +3,6 @@
     "dev": "nodemon -r esm express.js",
     "test": "node --inspect --experimental-vm-modules node_modules/jest/bin/jest.js --watch"
   },
-  "type": "module",
   "dependencies": {
     "@testing-library/react": "^13.4.0",
     "axios": "^1.2.2",

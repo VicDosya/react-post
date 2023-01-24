@@ -28,7 +28,7 @@ function HomePage() {
     try {
       const res = await axios.get("/api/posts");
       setPosts(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err.response.data.error);
     }
   };

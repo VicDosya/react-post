@@ -1,5 +1,5 @@
 //Import packages
-import { React, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -36,7 +36,7 @@ function EditPost() {
       setTitle(res.data.title);
       setDescription(res.data.body);
       return res.data;
-    } catch (err) {
+    } catch (err : any) {
       setError(err.response.data.error);
     }
   };
@@ -48,7 +48,7 @@ function EditPost() {
     if (!_post) {
       navigate("/");
     }
-    if (profile._id !== _post.userId) {
+    if (profile!._id !== _post.userId) {
       navigate(`/post/${postId}`);
     }
     setBtnDisabled(false);
@@ -64,7 +64,7 @@ function EditPost() {
       });
       setError("");
       navigate(`/post/${postId}`);
-    } catch (err) {
+    } catch (err : any) {
       setError(err.response.data.error);
     }
     setBtnDisabled(false);
@@ -76,7 +76,7 @@ function EditPost() {
       const res = await axios.delete(`/api/posts/${postId}`);
       setStatusOfPost(res.data.statusMsg);
       navigate("/");
-    } catch (err) {
+    } catch (err : any) {
       setError(err.response.data.error);
     }
   };
@@ -136,7 +136,6 @@ function EditPost() {
           <textarea
             className={styles.createPostTextArea}
             placeholder="eg. Fill a pot full of water, take two eggs..."
-            type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>

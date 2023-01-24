@@ -1,8 +1,9 @@
 import React from "react";
 import Post from "./Post";
 import styles from "./Post.module.css";
+import { PostListType } from "./ReactPost.types";
 
-function PostList({ posts }) {
+function PostList({ posts }: PostListType) {
   return (
     <div>
       <hr className={styles.hrBreak}></hr>

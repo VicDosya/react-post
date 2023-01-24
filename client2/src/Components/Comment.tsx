@@ -1,9 +1,10 @@
-import { React, useContext } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProfileContext } from "./ProfileContext";
 import axios from "axios";
 import TimeAgo from "react-timeago";
 import styles from "./Comment.module.css";
+import {CommentType} from './ReactPost.types';
 
 function Comment({
   postId,
@@ -13,7 +14,7 @@ function Comment({
   author,
   onDelete,
   commentDate,
-}) {
+}: CommentType) {
   //useContext from App.js
   const { profile } = useContext(ProfileContext);
 
@@ -27,7 +28,7 @@ function Comment({
       if (res.data.auth) {
         navigate(`/post/${postId}/comment/${commentId}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err.response.data.error);
     }
   };
