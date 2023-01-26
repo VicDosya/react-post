@@ -11,11 +11,12 @@ function PostList({ posts }: PostListType) {
         {posts
           .map((post, key) => (
             <Post
-              id={post._id}
+              _id={post._id}
+              userId={post.userId}
               title={post.title}
               body={post.body}
               author={post.author}
-              postDate={post.createdAt}
+              createdAt={post.createdAt}
               commentsCount={post.commentsCount}
               key={key}
             ></Post>

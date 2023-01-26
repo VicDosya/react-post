@@ -8,12 +8,12 @@ function CommentList({ comments, postId, onDelete }: CommentListType) {
       {comments
         .map((comment, key) => (
           <Comment
+            _id={comment._id}
             postId={postId}
-            commentId={comment._id}
             userId={comment.userId}
             body={comment.body}
             author={comment.author}
-            commentDate={comment.createdAt}
+            createdAt={comment.createdAt}
             onDelete={onDelete}
             key={key}
           ></Comment>

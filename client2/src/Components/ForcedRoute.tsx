@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useState } from "react";
 import { useNavigate, Route } from "react-router-dom";
 import { ProfileContext } from "./ProfileContext";
-import {ProtectedRouteType} from './ReactPost.types';
+import { ProtectedRouteType, ProfileType, ErrorType } from './ReactPost.types';
 
 function ProtectedRoute({ component: Component, ...rest }: ProtectedRouteType) {
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ function ProtectedRoute({ component: Component, ...rest }: ProtectedRouteType) {
   const { loadProfile } = useContext(ProfileContext);
   let navigate = useNavigate();
   useEffect(() => {
-    loadProfile().then((data: any) => {
+    loadProfile().then((data: ProfileType | ErrorType) => {
       if (data && !data.error) {
         navigate("/");
       }

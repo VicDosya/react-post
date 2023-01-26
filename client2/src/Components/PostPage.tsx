@@ -9,12 +9,23 @@ import { ProfileContext } from "./ProfileContext";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import styles from "./PostPage.module.css";
-import { PostPageType } from "./ReactPost.types";
+import { CommentType, PostType } from "./ReactPost.types";
 
 function PostPage() {
+
+  const InitialPostValue: PostType = {
+    _id: '0',
+    userId: '',
+    title: '',
+    body: '',
+    author: '',
+    createdAt: '',
+    commentsCount: 0
+  };
+
   //useState Variables
-  const [post, setPost] = useState({} as PostPageType);
-  const [comments, setComments] = useState<any[]>([]);
+  const [post, setPost] = useState<PostType>(InitialPostValue);
+  const [comments, setComments] = useState<CommentType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [btnDisabled, setbtnDisabled] = useState(false);
@@ -76,7 +87,7 @@ function PostPage() {
         `/api/posts/${postId}/comments/${commentId}`
       );
       const filteredComments = comments.filter(
-        (comment) => comment.commentId === commentId
+        (comment) => comment._id === commentId
       );
       setComments(filteredComments);
       loadComments();

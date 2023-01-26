@@ -1,12 +1,12 @@
 // Comment.tsx
 export type CommentType = {
+  _id: string;
   postId: string | undefined;
-  commentId: string;
   userId: string;
   body: string;
   author: string;
+  createdAt: string;
   onDelete: Function;
-  commentDate: string;
 };
 
 //CommentForm.tsx
@@ -30,18 +30,31 @@ export type CommentListType = {
   onDelete: Function;
 };
 
-//ForcedRoute.tsx
+//ForcedRoute.tsx and ProtectedRoute.tsx
 export type ProtectedRouteType = {
   component: React.FunctionComponent;
 };
 
+export type ErrorType = {
+  error: string;
+};
+
+export type ProfileType = {
+  fname: string;
+  lname: string;
+  email: string;
+  createdAt: string;
+  error: ErrorType;
+};
+
 //Post.tsx
 export type PostType = {
-  id: string;
+  _id: string;
+  userId: string;
   title: string;
   body: string;
   author: string;
-  postDate: string;
+  createdAt: string;
   commentsCount: number;
 };
 
@@ -53,6 +66,7 @@ export type PostFormType = {
 //PostList.tsx
 type PostsType = {
   _id: string;
+  userId: string,
   title: string;
   body: string;
   author: string;
