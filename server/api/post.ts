@@ -37,10 +37,10 @@ app.post("/", async (req, res) => {
   }
   try {
     const post = new Post({
-      userId: req.session.user._id,
+      userId: req.session.user!._id,
       title: req.body.title,
       body: req.body.body,
-      author: req.session.user.fname + " " + req.session.user.lname,
+      author: req.session.user!.fname + " " + req.session.user!.lname,
     });
     await post.save(); //Updates the document in the DB.
     res.status(200).send({ statusMsg: "Submitted!" });
@@ -86,9 +86,9 @@ app.post("/:postId/comments", async (req, res) => {
   }
   const comment = new Comment({
     post: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
     body: req.body.comment,
-    author: req.session.user.fname + " " + req.session.user.lname,
+    author: req.session.user!.fname + " " + req.session.user!.lname,
   });
   await comment.save();
   post.commentsCount++;
@@ -126,7 +126,7 @@ app.get("/:postId/comments", async (req, res) => {
 app.get("/:postId/comments/:commentId", async (req, res) => {
   const post = await Post.find({
     _id: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
   });
   if (!post) {
     return res.status(404).send({ error: "Post is not found." });
@@ -135,7 +135,7 @@ app.get("/:postId/comments/:commentId", async (req, res) => {
   const comment = await Comment.find({
     _id: req.params.commentId,
     post: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
   });
   if (!comment) {
     return res.status(404).send({ error: "Comment not found." });
@@ -161,9 +161,12 @@ app.get("/:postId/comments/:commentId/edit", async (req, res) => {
   const comment = await Comment.findOne({
     _id: req.params.commentId,
     post: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
   });
-  if (comment.userId !== req.session.user._id) {
+  if (!comment) {
+    return res.status(404).send({ error: "Comment not found." });
+  }
+  if (comment.userId !== req.session.user!._id.toString()) {
     return res
       .status(401)
       .send({ error: "You are not the owner of this comment." });
@@ -190,7 +193,7 @@ app.put("/:postId/comments/:commentId", async (req, res) => {
   const comment = await Comment.findOne({
     _id: req.params.commentId,
     post: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
   });
   if (!comment) {
     return res.status(404).send({ error: "Comment not found." });
@@ -225,12 +228,12 @@ app.delete("/:postId/comments/:commentId", async (req, res) => {
   const comment = await Comment.findOne({
     _id: req.params.commentId,
     post: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
   });
   if (!comment) {
     return res.status(404).send({ error: "Comment not found." });
   }
-  if (req.session.user._id !== comment.userId) {
+  if (req.session.user!._id.toString() !== comment.userId) {
     return res
       .status(401)
       .send({ error: "You are not the owner of this comment." });
@@ -239,7 +242,7 @@ app.delete("/:postId/comments/:commentId", async (req, res) => {
     await Comment.deleteOne({
       _id: req.params.commentId,
       post: req.params.postId,
-      userId: req.session.user._id,
+      userId: req.session.user!._id,
     });
     post.commentsCount--;
     await post.save();
@@ -283,7 +286,7 @@ app.put("/:postId", async (req, res) => {
   try {
     const post = await Post.findOne({
       _id: req.params.postId,
-      userId: req.session.user._id,
+      userId: req.session.user!._id,
     });
 
     if (!post) {
@@ -310,12 +313,12 @@ app.put("/:postId", async (req, res) => {
 app.delete("/:postId", async (req, res) => {
   const post = await Post.findOne({
     _id: req.params.postId,
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
   });
   if (!post) {
     return res.status(404).send({ error: "Post does not exist." });
   }
-  if (post.userId !== req.session.user._id) {
+  if (post.userId !== req.session.user!._id.toString()) {
     return res
       .status(401)
       .send({ error: "You are not the owner of the post!" });
@@ -323,7 +326,7 @@ app.delete("/:postId", async (req, res) => {
   try {
     await Post.deleteOne({
       _id: req.params.postId,
-      userId: req.session.user._id,
+      userId: req.session.user!._id,
     });
     res.status(200).send({ statusMsg: "Post deleted!" });
   } catch (err) {
@@ -387,7 +390,7 @@ app.post("/:postId/votes", async (req, res) => {
   }
   //Validate if vote has been already made
   const alreadyVoted = await PostVote.findOne({
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
     post: req.params.postId,
   });
   if (alreadyVoted) {
@@ -396,7 +399,7 @@ app.post("/:postId/votes", async (req, res) => {
     return res.status(201).send({ statusMsg: "Vote has been changed." });
   }
   const vote = new PostVote({
-    userId: req.session.user._id,
+    userId: req.session.user!._id,
     post: req.params.postId,
     vote: req.body.vote,
   });

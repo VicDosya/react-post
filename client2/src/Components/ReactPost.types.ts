@@ -66,7 +66,7 @@ export type PostFormType = {
 //PostList.tsx
 type PostsType = {
   _id: string;
-  userId: string,
+  userId: string;
   title: string;
   body: string;
   author: string;
