@@ -13,7 +13,7 @@ The project uses NodeJS, React, Mongodb and is migrated to TypeScript.
 7. The app should load... Enjoy!
 
 # Screenshots
-![0](https://user-images.githubusercontent.com/96661032/215337221-f90b1267-6bca-482f-9905-8ea57606a6a5.png)
+![0](https://user-images.githubusercontent.com/96661032/215337616-c233c967-6771-4029-a9c9-dee9c05800b5.png)
 ![1](https://user-images.githubusercontent.com/96661032/215337552-a32fb889-6ab0-468f-82a4-3c2bf174d4a7.png)
 
 
