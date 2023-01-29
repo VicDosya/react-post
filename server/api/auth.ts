@@ -46,7 +46,7 @@ app.post("/register", async (req, res) => {
 
   checkValidation();
 
-  if (validInputs !== false) {
+  if (validInputs) {
     //Encrypt the password
     const salt = bcrypt.genSaltSync(10);
     const encryptedPassword = await bcrypt.hash(req.body.password, salt);
