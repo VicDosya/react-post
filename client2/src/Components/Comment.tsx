@@ -1,19 +1,20 @@
-import { React, useContext } from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProfileContext } from "./ProfileContext";
 import axios from "axios";
 import TimeAgo from "react-timeago";
 import styles from "./Comment.module.css";
+import {CommentType} from './ReactPost.types';
 
 function Comment({
   postId,
-  commentId,
+  _id,
   userId,
   body,
   author,
   onDelete,
-  commentDate,
-}) {
+  createdAt,
+}: CommentType) {
   //useContext from App.js
   const { profile } = useContext(ProfileContext);
 
@@ -23,11 +24,11 @@ function Comment({
   //handleEdit comment functionality
   const handleEdit = async () => {
     try {
-      const res = await axios.get(`/api/posts/${postId}/comments/${commentId}`);
+      const res = await axios.get(`/api/posts/${postId}/comments/${_id}`);
       if (res.data.auth) {
-        navigate(`/post/${postId}/comment/${commentId}`);
+        navigate(`/post/${postId}/comment/${_id}`);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err.response.data.error);
     }
   };
@@ -46,7 +47,7 @@ function Comment({
                 Edit
               </button>
               <button
-                onClick={() => onDelete(commentId)}
+                onClick={() => onDelete(_id)}
                 className={styles.modifyBtn}
               >
                 Delete
@@ -56,7 +57,7 @@ function Comment({
         </div>
         <div className={styles.dateCtn}>
           <div className={styles.commentDate}>
-            <TimeAgo date={commentDate} />
+            <TimeAgo date={createdAt} />
           </div>
         </div>
       </div>

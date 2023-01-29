@@ -1,5 +1,5 @@
 //Import packages
-import { React, useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import TimeAgo from "react-timeago";
@@ -9,11 +9,23 @@ import { ProfileContext } from "./ProfileContext";
 import CommentForm from "./CommentForm";
 import CommentList from "./CommentList";
 import styles from "./PostPage.module.css";
+import { CommentType, PostType } from "./ReactPost.types";
 
-function PostPage({ posts }) {
+function PostPage() {
+
+  const InitialPostValue: PostType = {
+    _id: '0',
+    userId: '',
+    title: '',
+    body: '',
+    author: '',
+    createdAt: '',
+    commentsCount: 0
+  };
+
   //useState Variables
-  const [post, setPost] = useState({});
-  const [comments, setComments] = useState([]);
+  const [post, setPost] = useState<PostType>(InitialPostValue);
+  const [comments, setComments] = useState<CommentType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [btnDisabled, setbtnDisabled] = useState(false);
@@ -52,7 +64,7 @@ function PostPage({ posts }) {
       const res = await axios.get(`/api/posts/${postId}`);
       setPost(res.data);
       setError("");
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
     setLoading(false);
@@ -63,23 +75,23 @@ function PostPage({ posts }) {
     try {
       const res = await axios.get(`/api/posts/${postId}/comments`);
       setComments(res.data.comments);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
 
   //Delete a comment - commentId parameter is from Comment.js fired by button click.
-  const deleteComment = async (commentId) => {
+  const deleteComment = async (commentId: string) => {
     try {
       const res = await axios.delete(
         `/api/posts/${postId}/comments/${commentId}`
       );
       const filteredComments = comments.filter(
-        (comment) => comment.commentId === commentId
+        (comment) => comment._id === commentId
       );
       setComments(filteredComments);
       loadComments();
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
@@ -95,13 +107,13 @@ function PostPage({ posts }) {
       setVoteDown(res.data.votesDownCount);
       setVoteUpDisabled(false);
       setVoteDownDisabled(false);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
 
   //Send a vote to the server
-  const handleVote = async (num) => {
+  const handleVote = async (num: number) => {
     setVoteUpDisabled(true);
     setVoteDownDisabled(true);
     try {
@@ -112,7 +124,7 @@ function PostPage({ posts }) {
       getAllVotes();
       setVoteUpDisabled(false);
       setVoteDownDisabled(false);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
   };
@@ -161,19 +173,22 @@ function PostPage({ posts }) {
       <div className={styles.cardStyle}>
         <div className={styles.votingCtn}>
           <span className={styles.upAmount}>{voteUp}</span>
-          <div
-            className={styles.voteUp}
-            onClick={() => handleVote(1)}
-            disabled={voteUpDisabled}
-          >
-            👍
+          <div>
+            <button
+              className={styles.voteUp}
+              onClick={() => handleVote(1)}
+              disabled={voteUpDisabled}>
+              👍
+            </button>
+
           </div>
-          <div
-            className={styles.voteDown}
-            onClick={() => handleVote(-1)}
-            disabled={voteDownDisabled}
-          >
-            👎
+          <div>
+            <button
+              className={styles.voteDown}
+              onClick={() => handleVote(-1)}
+              disabled={voteDownDisabled}
+            >👎</button>
+
           </div>
           <span className={styles.downAmount}>{voteDown}</span>
         </div>

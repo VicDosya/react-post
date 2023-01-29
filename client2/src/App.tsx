@@ -1,5 +1,5 @@
 //Import packages
-import { React, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 
@@ -28,7 +28,7 @@ function App() {
       const res = await axios.get("/api/auth/profile");
       setProfile(res.data);
       return res.data;
-    } catch (err) {
+    } catch (err: any) {
       console.log(err.response.data.message);
     }
   };

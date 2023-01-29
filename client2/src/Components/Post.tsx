@@ -1,14 +1,15 @@
 //Import packages
-import { React } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Post.module.css";
 import TimeAgo from "react-timeago";
+import { PostType } from "./ReactPost.types";
 
-function Post({ id, title, body, author, postDate, commentsCount }) {
+function Post({ _id, title, body, author, createdAt, commentsCount }: PostType) {
   //Navigate inside a post functionality and send its post data inside it.
   let navigate = useNavigate();
   const goToPost = () => {
-    navigate(`/post/${id}`);
+    navigate(`/post/${_id}`);
   };
 
   return (
@@ -38,7 +39,7 @@ function Post({ id, title, body, author, postDate, commentsCount }) {
           <div className={styles.commentsCtn}>Comments: {commentsCount}</div>
           {/* Date */}
           <div className={styles.postDateTime}>
-            Posted: <TimeAgo date={postDate} />
+            Posted: <TimeAgo date={createdAt} />
           </div>
         </div>
       </div>

@@ -1,8 +1,9 @@
 import React from "react";
 import Post from "./Post";
 import styles from "./Post.module.css";
+import { PostListType } from "./ReactPost.types";
 
-function PostList({ posts }) {
+function PostList({ posts }: PostListType) {
   return (
     <div>
       <hr className={styles.hrBreak}></hr>
@@ -10,11 +11,12 @@ function PostList({ posts }) {
         {posts
           .map((post, key) => (
             <Post
-              id={post._id}
+              _id={post._id}
+              userId={post.userId}
               title={post.title}
               body={post.body}
               author={post.author}
-              postDate={post.createdAt}
+              createdAt={post.createdAt}
               commentsCount={post.commentsCount}
               key={key}
             ></Post>

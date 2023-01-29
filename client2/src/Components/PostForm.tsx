@@ -1,9 +1,10 @@
 //Import packages (ESM is installed):
-import { React, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styles from "./PostForm.module.css";
+import { PostFormType } from "./ReactPost.types";
 
-function PostForm({ onPostSubmitted }) {
+function PostForm({ onPostSubmitted }: PostFormType) {
   //useState Variables:
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -29,7 +30,7 @@ function PostForm({ onPostSubmitted }) {
       setTitle("");
       setDescription("");
       setBtnDisabled(false);
-    } catch (err) {
+    } catch (err: any) {
       setStatusOfPost(err.response.data.statusMsg);
     }
   };
@@ -61,7 +62,6 @@ function PostForm({ onPostSubmitted }) {
           <textarea
             className={styles.createPostTextArea}
             placeholder="eg. Fill a pot full of water, take two eggs..."
-            type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           ></textarea>

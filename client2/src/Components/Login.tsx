@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "./Auth.module.css";
@@ -27,7 +27,7 @@ function Login() {
       setEmail("");
       setPassword("");
       navigate("/");
-    } catch (err) {
+    } catch (err: any) {
       setStatus(err.response.data.message);
     }
   };

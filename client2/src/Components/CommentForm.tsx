@@ -1,8 +1,9 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import styles from "./CommentForm.module.css";
 import axios from "axios";
+import {CommentFormType} from './ReactPost.types';
 
-function CommentForm({ postId, loadComments }) {
+function CommentForm({ postId, loadComments }: CommentFormType) {
   //useState Variables
   const [comment, setComment] = useState("");
   const [error, setError] = useState("");
@@ -18,7 +19,7 @@ function CommentForm({ postId, loadComments }) {
       setComment("");
       loadComments();
       setError("");
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response.data.error);
     }
     setbtnDisabled(false);
@@ -30,7 +31,6 @@ function CommentForm({ postId, loadComments }) {
         <h1 className={styles.addCommentTitle}>Add a comment:</h1>
         <div className={styles.textAreaCtn}>
           <textarea
-            type="text"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             className={styles.commentTextArea}
