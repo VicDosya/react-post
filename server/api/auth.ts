@@ -46,7 +46,7 @@ app.post("/register", async (req, res) => {
 
   checkValidation();
 
-  if (validInputs === true) {
+  if (validInputs !== false) {
     //Encrypt the password
     const salt = bcrypt.genSaltSync(10);
     const encryptedPassword = await bcrypt.hash(req.body.password, salt);
@@ -122,7 +122,7 @@ app.get("/profile", async (req, res) => {
  * @returns {object} 200 - Returns an object that contains a status
  */
 app.get("/logout", async (req, res) => {
-  req.session.user = null; //Removing the user from the session
+  req.session.user = undefined; //Removing the user from the session
   res.status(200).send({ status: "Logged out..." });
 });
 
