@@ -14,5 +14,6 @@ The project uses NodeJS, React, Mongodb and is migrated to TypeScript.
 
 # Screenshots
 ![0](https://user-images.githubusercontent.com/96661032/215337221-f90b1267-6bca-482f-9905-8ea57606a6a5.png)
-![1](https://user-images.githubusercontent.com/96661032/215337224-92415eff-79cf-40f9-aabe-ce0888241497.png)
+![1](https://user-images.githubusercontent.com/96661032/215337552-a32fb889-6ab0-468f-82a4-3c2bf174d4a7.png)
+
 
